@@ -8,8 +8,8 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     let editor = 'react-quill'
-    const state = JSON.parse(localStorage.getItem('app-store') || '')
-    setEditor(state.state.editor || editor)
+    const json = localStorage.getItem('app-store')
+    setEditor(json ? JSON.parse(json).state.editor : editor)
   }, [])
 
   return (

@@ -30,8 +30,8 @@ export default function Page() {
 
   useEffect(() => {
     let html = ''
-    const state = JSON.parse(localStorage.getItem('app-store') || '')
-    setDefaultHTML(state.state.html || html)
+    const json = localStorage.getItem('app-store')
+    setDefaultHTML(json ? JSON.parse(json).state.html : html)
   }, [])
 
   const editorMap: Record<EditorType, React.ReactNode> = {
