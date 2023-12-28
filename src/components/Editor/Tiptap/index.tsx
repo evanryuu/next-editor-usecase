@@ -23,6 +23,7 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import './tiptap.css'
+import Toolbar from './Toolbar'
 // import Document from '@tiptap/extension-document'
 // import Paragraph from '@tiptap/extension-paragraph'
 // import Text from '@tiptap/extension-text'
@@ -49,7 +50,8 @@ const Tiptap: React.FC<TiptapProps> = (props) => {
 
   return (
     <div className={props.className}>
-      <EditorContent editor={editor}  />
+      <Toolbar editor={editor!} />
+      <EditorContent editor={editor} />
     </div>
   )
 }
