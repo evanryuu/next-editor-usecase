@@ -3,11 +3,14 @@ interface PreviewProps {
   className?: string
 }
 
-const Preview: React.FC<PreviewProps> = ({html, className}) => {
+const Preview: React.FC<PreviewProps> = ({ html, className }) => {
   return (
-    <div className={className} dangerouslySetInnerHTML={{
-      __html: html
-    }}></div>
+    <div
+      className={`${className} bg-white border-l `}
+      dangerouslySetInnerHTML={{
+        __html: html,
+      }}
+    ></div>
   )
 }
 

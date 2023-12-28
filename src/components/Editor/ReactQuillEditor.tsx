@@ -1,23 +1,25 @@
 'use client'
 import { EditorProps } from '@/types'
 import dynamic from 'next/dynamic'
-import React, { useRef } from 'react'
-
+import React, { useEffect, useRef } from 'react'
+import {Quill} from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+// Quill.register('', '')
 
-const ReactQuillEditor: React.FC<EditorProps> = ({ onChange, className }) => {
-  const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+const ReactQuillEditor: React.FC<EditorProps> = (props) => {
   const value = useRef('')
-  console.log('render')
+  useEffect(() => {
+    value.current = props.html || ''
+  }, [])
   const handleChange = (str: string) => {
-    console.log(str)
-    if (onChange) {
+    if (props.onChange) {
       value.current = str
-      onChange(str)
+      props.onChange(str)
     }
   }
 
-  return <ReactQuill className={className} theme="snow" value={value.current} onChange={handleChange} />
+  return <ReactQuill className={props.className} theme="snow" value={props.html} onChange={handleChange} />
 }
 
 export default ReactQuillEditor

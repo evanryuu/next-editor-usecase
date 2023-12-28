@@ -13,6 +13,7 @@
 .tiptap h5,
 .tiptap h6 {
   line-height: 1.1;
+  font-weight: 600;
 }
 .tiptap code {
   background-color: rgba(97, 97, 97, 0.1);
