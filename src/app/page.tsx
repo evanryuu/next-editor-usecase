@@ -1,51 +1,29 @@
-'use client'
+import Image from 'next/image'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
-import Novel from '@/components/Editor/Novel'
-// import QuillEditor from '@/components/Editor/Quill'
-import ReactQuillEditor from '@/components/Editor/ReactQuillEditor'
-// import SlateEditor from '@/components/Editor/Slate'
-// import Tiptap from '@/components/Editor/Tiptap'
-import Preview from '@/components/Preview'
-import { EditorType, useAppStore } from '@/store'
-import dynamic from 'next/dynamic'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+const editors = ['quill', 'tiptap', 'lexical', 'slate']
 
-const TiptapNoSSR = dynamic(() => import('@/components/Editor/Tiptap/index'), { ssr: false })
-const SlateEditor = dynamic(() => import('@/components/Editor/Slate'), { ssr: false })
-const LexicalEditor = dynamic(() => import('@/components/Editor/Lexical'), { ssr: false })
-
-const TiptapNoSSRMemo = React.memo(TiptapNoSSR)
-const SlateEditorMemo = React.memo(SlateEditor)
-const LexicalEditorMemo = React.memo(LexicalEditor)
-
-const ReactQuillEditorMemo = React.memo(ReactQuillEditor)
-const NovelMemo = React.memo(Novel)
-
-export default function Page() {
-  const { editor, html, setHTML: setDefaultHTML } = useAppStore()
-
-  const handleChange = useCallback((str: string) => {
-    setDefaultHTML(str)
-  }, [])
-
-  useEffect(() => {
-    let html = ''
-    const json = localStorage.getItem('app-store')
-    setDefaultHTML(json ? JSON.parse(json).state.html : html)
-  }, [])
-
-  const editorMap: Record<EditorType, React.ReactNode> = {
-    'react-quill': <ReactQuillEditorMemo html={html} className="h-full" onChange={handleChange} />,
-    'novel': <NovelMemo html={html} className="!max-w-none" onChange={handleChange} />,
-    'tiptap': <TiptapNoSSRMemo html={html} onChange={handleChange} />,
-    'slate': <SlateEditorMemo html={html} className="w-1/2" onChange={handleChange} />,
-    'lexical': <LexicalEditorMemo html={html} className="w-1/2" onChange={handleChange} />,
-  }
-
+export default function Home() {
   return (
-    <div className="min-h-[100vh] flex">
-      <div className="bg-white w-1/2">{editorMap[editor]}</div>
-      <Preview className="w-1/2" html={html} />
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
+        <Image
+          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
+          src="/next.svg"
+          alt="Next.js Logo"
+          width={180}
+          height={37}
+          priority
+        />
+      </div>
+      <div className="flex mt-2">
+        {editors.map((route) => (
+          <Link className="text-2xl bg-neutral-800 rounded-lg p-4 text-white hover:text-cyan-900 capitalize ml-2" href={route} key={route}>
+            {route}
+          </Link>
+        ))}
+      </div>
+    </main>
   )
 }
