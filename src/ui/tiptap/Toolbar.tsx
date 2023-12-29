@@ -2,7 +2,7 @@
 
 import { type Editor } from '@tiptap/react'
 import { Bold, Strikethrough, Italic, List, ListOrdered, Heading2, Heading1, Heading3, Heading4 } from 'lucide-react'
-import { Toggle } from '@/components/ui/toggle'
+import { Toggle } from '@/ui/toggle'
 
 interface Props {
   editor?: Editor

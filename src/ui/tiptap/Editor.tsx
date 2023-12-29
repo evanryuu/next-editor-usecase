@@ -1,28 +1,7 @@
-// 'use client'
-
-// import { EditorProps } from '@tiptap/pm/view'
-// import { useEditor, EditorContent } from '@tiptap/react'
-// import StarterKit from '@tiptap/starter-kit'
-
-// const Tiptap: React.FC<{className?: string, onChange?: (data: any) => void}> = (props) => {
-//   const editor = useEditor({
-//     extensions: [
-//       StarterKit,
-//     ],
-//     content: '<p>Hello World! 🌎️</p>',
-//   })
-
-//   return (
-//     <EditorContent className={props.className} editor={editor} />
-//   )
-// }
-
-// export default Tiptap
 'use client'
 
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import './tiptap.css'
 import Toolbar from './Toolbar'
 // import Document from '@tiptap/extension-document'
 // import Paragraph from '@tiptap/extension-paragraph'
@@ -51,7 +30,7 @@ const Tiptap: React.FC<TiptapProps> = (props) => {
   return (
     <div className={props.className}>
       <Toolbar editor={editor!} />
-      <EditorContent editor={editor} />
+      <EditorContent className="h-full *:h-full" editor={editor} />
     </div>
   )
 }
