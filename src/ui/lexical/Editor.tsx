@@ -47,12 +47,14 @@ const LexicalEditor: React.FC<EditorProps> = (props) => {
   }
 
   return (
+    <div className={props.className}>
     <LexicalComposer initialConfig={initialConfig}>
       <PlainTextPlugin contentEditable={<ContentEditable />} placeholder={<div>Enter some text...</div>} ErrorBoundary={LexicalErrorBoundary} />
       <HistoryPlugin />
       <MyCustomAutoFocusPlugin />
       <OnChangePlugin onChange={onChange} />
     </LexicalComposer>
+    </div>
   )
 }
 

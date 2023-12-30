@@ -20,9 +20,9 @@ export default function Page() {
   }, [])
 
   return (
-    <div className="min-h-[100vh] flex">
-      <LexicalEditor className="w-1/2" onChange={handleChange} />
-      <Preview className="w-1/2" html={html} />
+    <div className="h-[100vh] flex">
+      <LexicalEditor className="flex-1 h-full *:h-full *:border *:border-solid *:border-cyan-300" onChange={handleChange} />
+      <Preview className="flex-1" html={html} />
     </div>
   )
 }
