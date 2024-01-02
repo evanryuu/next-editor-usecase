@@ -90,6 +90,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
+  white-space: pre-wrap;
   background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 /* Basic editor styles */
@@ -135,4 +136,19 @@ hr {
   border: none;
   border-top: 2px solid rgba(13, 13, 13, 0.1);
   margin: 2rem 0;
+}
+
+a {
+  color: teal;
+}
+
+.resizableDiv {
+  resize: both;
+  cursor: nwse-resize;
+  border: 2px solid #3498db; /* 初始边框颜色 */
+}
+.resizableDiv img {
+  width: 100%;
+  height: auto;
+  display: block;
 }

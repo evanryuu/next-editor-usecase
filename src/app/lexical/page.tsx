@@ -4,7 +4,7 @@ import Preview from '@/components/Preview'
 import { EditorType, useAppStore } from '@/store'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-const LexicalEditor = dynamic(() => import('@/ui/lexical/Editor'), { ssr: false })
+const LexicalEditor = dynamic(() => import('@/ui/lexical'), { ssr: false })
 
 export default function Page() {
   const { editor, html, setHTML: setDefaultHTML } = useAppStore()
@@ -21,7 +21,7 @@ export default function Page() {
 
   return (
     <div className="h-[100vh] flex">
-      <LexicalEditor className="flex-1 h-full *:h-full *:border *:border-solid *:border-cyan-300" onChange={handleChange} />
+      <LexicalEditor className="flex-1  h-full border border-solid border-cyan-300" onChange={handleChange} />
       <Preview className="flex-1" html={html} />
     </div>
   )

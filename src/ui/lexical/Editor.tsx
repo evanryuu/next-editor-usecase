@@ -1,61 +1,131 @@
-import { $getRoot, $getSelection, EditorState } from 'lexical'
-import { useEffect, useState } from 'react'
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
 
-import { LexicalComposer } from '@lexical/react/LexicalComposer'
-import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin'
-import { ContentEditable } from '@lexical/react/LexicalContentEditable'
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
+import { CharacterLimitPlugin } from '@lexical/react/LexicalCharacterLimitPlugin'
+import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin'
+import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin'
+import LexicalClickableLinkPlugin from '@lexical/react/LexicalClickableLinkPlugin'
+import { CollaborationPlugin } from '@lexical/react/LexicalCollaborationPlugin'
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary'
-import { EditorProps } from '@/types'
+import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin'
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
+import { HorizontalRulePlugin } from '@lexical/react/LexicalHorizontalRulePlugin'
+import { ListPlugin } from '@lexical/react/LexicalListPlugin'
+import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin'
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
+import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin'
+import { TablePlugin } from '@lexical/react/LexicalTablePlugin'
+import useLexicalEditable from '@lexical/react/useLexicalEditable'
+import * as React from 'react'
+import { useEffect, useState } from 'react'
+import { CAN_USE_DOM } from '@/shared/canUseDOM'
 
-const theme = {
-  // Theme styling goes here
-}
+import AutoEmbedPlugin from './plugins/AutoEmbedPlugin'
+import AutoLinkPlugin from './plugins/AutoLinkPlugin'
+import ImagesPlugin from './plugins/ImagesPlugin'
+import LinkPlugin from './plugins/LinkPlugin'
+import TableOfContentsPlugin from './plugins/TableOfContentsPlugin'
+import ToolbarPlugin from './plugins/ToolbarPlugin'
+import TwitterPlugin from './plugins/TwitterPlugin'
+import { useSharedHistoryContext } from './context/SharedHistoryContext'
+import Placeholder from './components/Placeholder'
+import { useSettings } from './context/SettingsContext'
+import YouTubePlugin from './plugins/YoutubePlugin'
+import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin'
 
-// Lexical React plugins are React components, which makes them
-// highly composable. Furthermore, you can lazy load plugins if
-// desired, so you don't pay the cost for plugins until you
-// actually use them.
-function MyCustomAutoFocusPlugin() {
-  const [editor] = useLexicalComposerContext()
+const skipCollaborationInit =
+  // @ts-expect-error
+  window.parent != null && window.parent.frames.right === window
+
+export default function Editor(): JSX.Element {
+  const { historyState } = useSharedHistoryContext()
+  const {
+    settings: {
+      isCollab,
+      isRichText,
+      showTreeView,
+      showTableOfContents,
+      shouldUseLexicalContextMenu,
+      tableCellMerge,
+      tableCellBackgroundColor,
+    },
+  } = useSettings()
+  const isEditable = useLexicalEditable()
+  const text = isCollab ? 'Enter some collaborative rich text...' : isRichText ? 'Enter some rich text...' : 'Enter some plain text...'
+  const placeholder = <Placeholder>{text}</Placeholder>
+  const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null)
+  const [isSmallWidthViewport, setIsSmallWidthViewport] = useState<boolean>(false)
+  const [isLinkEditMode, setIsLinkEditMode] = useState<boolean>(false)
+
+  const onRef = (_floatingAnchorElem: HTMLDivElement) => {
+    if (_floatingAnchorElem !== null) {
+      setFloatingAnchorElem(_floatingAnchorElem)
+    }
+  }
 
   useEffect(() => {
-    // Focus the editor when the effect fires!
-    editor.focus()
-  }, [editor])
+    const updateViewPortWidth = () => {
+      const isNextSmallWidthViewport = CAN_USE_DOM && window.matchMedia('(max-width: 1025px)').matches
 
-  return null
-}
+      if (isNextSmallWidthViewport !== isSmallWidthViewport) {
+        setIsSmallWidthViewport(isNextSmallWidthViewport)
+      }
+    }
+    updateViewPortWidth()
+    window.addEventListener('resize', updateViewPortWidth)
 
-// Catch any errors that occur during Lexical updates and log them
-// or throw them as needed. If you don't throw them, Lexical will
-// try to recover gracefully without losing user data.
-function onError(error: Error): void {
-  console.error(error)
-}
-const LexicalEditor: React.FC<EditorProps> = (props) => {
-  const [editorState, setEditorState] = useState<EditorState>()
-  function onChange(editorState: EditorState) {
-    setEditorState(editorState)
-  }
-  const initialConfig = {
-    namespace: 'MyEditor',
-    theme,
-    onError,
-  }
+    return () => {
+      window.removeEventListener('resize', updateViewPortWidth)
+    }
+  }, [isSmallWidthViewport])
 
   return (
-    <div className={props.className}>
-    <LexicalComposer initialConfig={initialConfig}>
-      <PlainTextPlugin contentEditable={<ContentEditable />} placeholder={<div>Enter some text...</div>} ErrorBoundary={LexicalErrorBoundary} />
-      <HistoryPlugin />
-      <MyCustomAutoFocusPlugin />
-      <OnChangePlugin onChange={onChange} />
-    </LexicalComposer>
-    </div>
+    <>
+      {isRichText && <ToolbarPlugin setIsLinkEditMode={setIsLinkEditMode} />}
+      <div className={`editor-container ${showTreeView ? 'tree-view' : ''} ${!isRichText ? 'plain-text' : ''}`}>
+        <AutoFocusPlugin />
+        <HashtagPlugin />
+        <AutoLinkPlugin />
+        {isRichText ? (
+          <>
+            <HistoryPlugin externalHistoryState={historyState} />
+
+            <ListPlugin />
+            <CheckListPlugin />
+            <TablePlugin hasCellMerge={tableCellMerge} hasCellBackgroundColor={tableCellBackgroundColor} />
+            {/* <TableCellResizer /> */}
+            <ImagesPlugin />
+            <LinkPlugin />
+            <TwitterPlugin />
+            <YouTubePlugin />
+            {!isEditable && <LexicalClickableLinkPlugin />}
+            <HorizontalRulePlugin />
+            <TabIndentationPlugin />
+            {floatingAnchorElem && !isSmallWidthViewport && (
+              <>
+                <FloatingLinkEditorPlugin
+                  anchorElem={floatingAnchorElem}
+                  isLinkEditMode={isLinkEditMode}
+                  setIsLinkEditMode={setIsLinkEditMode}
+                />
+                {/* <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} /> */}
+                {/* <FloatingTextFormatToolbarPlugin anchorElem={floatingAnchorElem} /> */}
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <HistoryPlugin externalHistoryState={historyState} />
+          </>
+        )}
+        <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
+      </div>
+    </>
   )
 }
-
-export default LexicalEditor
