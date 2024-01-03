@@ -4,16 +4,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
-export async function main() {
-  const completion = await openai.chat.completions.create({
-    messages: [{ role: 'system', content: 'You are a helpful assistant.' }],
-    model: 'gpt-3.5-turbo',
-  })
-
-  console.log(completion.choices[0])
-}
-
-main()
 export async function POST(req: Request) {
   // Check if the OPENAI_API_KEY is set, if not return 400
   let { prompt } = await req.json()
@@ -35,13 +25,8 @@ export async function POST(req: Request) {
         content: prompt,
       },
     ],
-    temperature: 0.7,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-    stream: true,
-    n: 1,
   })
 
   console.log(response)
+  return response
 }
