@@ -175,12 +175,6 @@ const getSuggestionItems = ({ query }: { query: string }) => {
         input.click()
       },
     },
-    {
-      title: 'Test Completion',
-      description: 'Use AI to expand your thoughts.',
-      searchTerms: ['gpt'],
-      icon: <Magic className="w-7" />,
-    },
   ].filter((item) => {
     if (typeof query === 'string' && query.length > 0) {
       const search = query.toLowerCase()
@@ -250,24 +244,6 @@ const CommandList = ({ items, command, editor, range }: { items: CommandItemProp
               offset: 1,
             }),
           )
-        } else if (item.title === 'Test Completion') {
-          const response = await fetch('/api/test-completion', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              prompt: 'Hi there~',
-            }),
-          })
-
-          if (!response.ok) {
-            throw new Error('Failed to submit the data. Please try again.')
-          }
-
-          // Handle response if necessary
-          const data = await response.json()
-          console.log(data)
         } else {
           command(item)
         }
