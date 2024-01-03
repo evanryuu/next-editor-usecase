@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import SloganGenerator from './SloganGenerator'
 
 const editors = ['tiptap', 'lexical']
 
@@ -23,6 +24,7 @@ export default function Home() {
             {route}
           </Link>
         ))}
+        <SloganGenerator />
       </div>
     </main>
   )
