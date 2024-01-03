@@ -12,6 +12,8 @@ import Text from '@tiptap/extension-text'
 import Code from '@tiptap/extension-code'
 import Image from '@tiptap/extension-image'
 import CustomImage from './plugins/customImage'
+import { useAppStore } from '@/store'
+import { useDebounceFn, useRafInterval } from 'ahooks'
 
 // import Heading from '@tiptap/extension-heading'
 
@@ -21,6 +23,8 @@ interface TiptapProps {
   onChange?: (str: string) => void
 }
 const Tiptap: React.FC<TiptapProps> = (props) => {
+  const { html, setHTML } = useAppStore()
+  const debounceSetHTML = useDebounceFn((fn: () => string) => Promise.resolve().then(() => setHTML(fn())), { wait: 350 })
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -46,9 +50,7 @@ const Tiptap: React.FC<TiptapProps> = (props) => {
     injectCSS: false,
     editable: true,
     onUpdate: (e) => {
-      if (props.onChange) {
-        props.onChange(e.editor.getHTML())
-      }
+      debounceSetHTML.run(e.editor.getHTML.bind(e.editor))
     },
   })
 
@@ -56,7 +58,7 @@ const Tiptap: React.FC<TiptapProps> = (props) => {
     <div className={props.className}>
       {editor && <Toolbar editor={editor} />}
       {editor && <TiptapBubbleMenu editor={editor} />}
-      <EditorContent className="h-full *:h-full *:p-4" editor={editor} />
+      <EditorContent className="*:min-h-[100vh] *:p-4" editor={editor} />
     </div>
   )
 }

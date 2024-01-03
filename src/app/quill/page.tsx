@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 const QuillEditor = dynamic(() => import('@/ui/quill/Editor'), { ssr: false })
 
 export default function Page() {
-  const { editor, html, setHTML: setDefaultHTML } = useAppStore()
+  const { html, setHTML: setDefaultHTML } = useAppStore()
 
   const handleChange = useCallback((str: string) => {
     setDefaultHTML(str)

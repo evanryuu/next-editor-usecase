@@ -20,11 +20,11 @@ import {
 } from 'lexical'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import * as React from 'react'
-// import invariant from 'shared/invariant'
+import invariant from '@/shared/invariant'
 
-import Button from '../components/Button'
-import { DialogActions } from '../components/Dialog'
-import TextInput from '../components/TextInput'
+import Button from '../ui/Button'
+import { DialogActions } from '../ui/Dialog'
+import TextInput from '../ui/TextInput'
 
 export type InsertTableCommandPayload = Readonly<{
   columns: string
@@ -138,7 +138,7 @@ export function TablePlugin({
 
   useEffect(() => {
     if (!editor.hasNodes([TableNode])) {
-      // invariant(false, 'TablePlugin: TableNode is not registered on editor')
+      invariant(false, 'TablePlugin: TableNode is not registered on editor')
     }
 
     cellContext.set(cellEditorConfig, children)

@@ -6,8 +6,10 @@
  *
  */
 
-const hostName = window.location.hostname
-export const isDevPlayground: boolean = hostName !== 'playground.lexical.dev' && hostName !== 'lexical-playground.vercel.app'
+const hostName = window.location.hostname;
+export const isDevPlayground: boolean =
+  hostName !== 'playground.lexical.dev' &&
+  hostName !== 'lexical-playground.vercel.app';
 
 export const DEFAULT_SETTINGS = {
   disableBeforeInput: false,
@@ -25,8 +27,8 @@ export const DEFAULT_SETTINGS = {
   showTreeView: true,
   tableCellBackgroundColor: true,
   tableCellMerge: true,
-}
+};
 
-export type SettingName = keyof typeof DEFAULT_SETTINGS
+export type SettingName = keyof typeof DEFAULT_SETTINGS;
 
-export type Settings = typeof DEFAULT_SETTINGS
+export type Settings = typeof DEFAULT_SETTINGS;

@@ -7,6 +7,7 @@ import { KeyboardEventHandler, useState } from 'react'
 import { getUrlFromString } from '@/shared/url'
 import { LinkSelector, LinkSelectorProps } from './BubbleMenu/LinkSelector'
 import { createPortal } from 'react-dom'
+import { useAppStore } from '@/store'
 
 interface Props {
   editor?: Editor
@@ -14,12 +15,13 @@ interface Props {
 
 const Toolbar: React.FC<Props> = ({ editor }) => {
   const [linkOpen, setLinkOpen] = useState(false)
+  const { setHTML } = useAppStore()
   if (!editor) {
     return null
   }
 
   return (
-    <div className="border bg-transparent flex">
+    <div className="border bg-transparent flex items-center">
       <Toggle
         size="sm"
         pressed={editor.isActive('heading', { level: 1 })}
@@ -69,6 +71,10 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
       </Toggle>
       <Toggle size="sm" pressed={editor.isActive({ textAlign: 'right' })} onClick={() => editor.chain().focus().setTextAlign('right').run()}>
         <i className="ri-align-right"></i>
+      </Toggle>
+      <span className="px-2">|</span>
+      <Toggle size="sm" onClick={() => setHTML(editor.getHTML())}>
+        <i className="ri-preview"></i>
       </Toggle>
     </div>
   )

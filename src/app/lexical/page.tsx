@@ -7,22 +7,21 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 const LexicalEditor = dynamic(() => import('@/ui/lexical'), { ssr: false })
 
 export default function Page() {
-  const { editor, html, setHTML: setDefaultHTML } = useAppStore()
+  const { html, setHTML: setDefaultHTML } = useAppStore()
 
-  const handleChange = useCallback((str: string) => {
-    setDefaultHTML(str)
-  }, [])
+  // const handleChange = useCallback((str: string) => {
+  //   setDefaultHTML(str)
+  // }, [])
 
   useEffect(() => {
     let html = ''
-    const json = localStorage.getItem('app-store')
-    setDefaultHTML(json ? JSON.parse(json).state.html : html)
+    setDefaultHTML(html)
   }, [])
 
   return (
-    <div className="h-[100vh] flex">
-      <LexicalEditor className="flex-1  h-full border border-solid border-cyan-300" onChange={handleChange} />
-      <Preview className="flex-1" html={html} />
+    <div className="min-h-[100vh] flex justify-center">
+      {/* <LexicalEditor className="flex-1  h-full border border-solid border-cyan-300" /> */}
+      <LexicalEditor />
     </div>
   )
 }
