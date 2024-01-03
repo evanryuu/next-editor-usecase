@@ -208,7 +208,6 @@ const CommandList = ({ items, command, editor, range }: { items: CommandItemProp
   const { completionApi } = useContext(NovelContext)
 
   const { complete, isLoading } = useCompletion({
-    id: 'novel',
     api: completionApi,
     onResponse: (response) => {
       if (response.status === 429) {
