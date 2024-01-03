@@ -219,6 +219,7 @@ const CommandList = ({ items, command, editor, range }: { items: CommandItemProp
     },
     onFinish: (_prompt, completion) => {
       // highlight the generated text
+      editor.commands.insertContent(completion)
       editor.commands.setTextSelection({
         from: range.from,
         to: range.from + completion.length,
