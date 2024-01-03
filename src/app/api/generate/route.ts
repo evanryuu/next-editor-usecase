@@ -14,7 +14,7 @@ export const runtime = 'edge'
 export async function POST(req: Request): Promise<Response> {
   // Check if the OPENAI_API_KEY is set, if not return 400
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === '') {
-    return new Response('Missing OPENAI_API_KEY – make sure to add it to your .env file.', {
+    return new Response('Missing OPENAI_API_KEY - make sure to add it to your .env file.', {
       status: 400,
     })
   }
@@ -68,8 +68,6 @@ export async function POST(req: Request): Promise<Response> {
 
   // Convert the response into a friendly text-stream
   const stream = OpenAIStream(response)
-
-  console.log(stream, response)
 
   // Respond with the stream
   return new StreamingTextResponse(stream)
