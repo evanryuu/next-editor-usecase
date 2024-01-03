@@ -9,9 +9,9 @@ export default function Page() {
   const { html } = useAppStore()
 
   return (
-    <div className="h-[100vh] flex">
-      <TiptapEditor className="flex-1 h-full" />
-      <Preview className="flex-1" html={html} />
+    <div className="min-h-[100vh] flex">
+      <TiptapEditor editorClassName="py-8 px-12" className="flex-1 h-full" />
+      <Preview className="flex-1 py-8 px-12" html={html} />
     </div>
   )
 }

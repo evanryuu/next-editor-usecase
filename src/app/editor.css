@@ -12,6 +12,22 @@ h6 {
   line-height: 1.1;
   font-weight: 600;
 }
+h1 {
+  font-size: 40px;
+}
+h2 {
+  font-size: 32px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 20px;
+}
+h5,
+h6 {
+  font-size: 16px;
+}
 code {
   background-color: rgba(97, 97, 97, 0.1);
   color: #616161;
@@ -45,7 +61,8 @@ hr {
 p {
   min-height: 24px;
 }
-a {
+a,
+a:visited {
   color: teal;
 }
 

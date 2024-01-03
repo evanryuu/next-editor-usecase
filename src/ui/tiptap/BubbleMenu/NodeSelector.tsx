@@ -13,7 +13,7 @@ interface NodeSelectorProps {
 export const NodeSelector: FC<NodeSelectorProps> = ({ editor, isOpen, setIsOpen }) => {
   const items: BubbleMenuItem[] = [
     {
-      name: 'Text',
+      name: 'Paragraph',
       icon: TextIcon,
       command: () => editor.chain().focus().toggleNode('paragraph', 'paragraph').run(),
       // I feel like there has to be a more efficient way to do this – feel free to PR if you know how!

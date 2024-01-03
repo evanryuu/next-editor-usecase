@@ -1,13 +1,10 @@
 'use client'
 
-import { BubbleMenu, type Editor } from '@tiptap/react'
-import { Bold, Strikethrough, Italic, List, ListOrdered, Heading2, Heading1, Heading3, Heading4 } from 'lucide-react'
+import { type Editor } from '@tiptap/react'
+import { Bold, Strikethrough, Italic } from 'lucide-react'
 import { Toggle } from '@/ui/toggle'
-import { KeyboardEventHandler, useState } from 'react'
-import { getUrlFromString } from '@/shared/url'
-import { LinkSelector, LinkSelectorProps } from './BubbleMenu/LinkSelector'
-import { createPortal } from 'react-dom'
-import { useAppStore } from '@/store'
+import { useState } from 'react'
+import { NodeSelector } from './BubbleMenu/NodeSelector'
 
 interface Props {
   editor?: Editor
@@ -15,41 +12,14 @@ interface Props {
 
 const Toolbar: React.FC<Props> = ({ editor }) => {
   const [linkOpen, setLinkOpen] = useState(false)
-  const { setHTML } = useAppStore()
+  const [nodeOpen, setNodeOpen] = useState(false)
   if (!editor) {
     return null
   }
 
   return (
     <div className="border bg-transparent flex items-center">
-      <Toggle
-        size="sm"
-        pressed={editor.isActive('heading', { level: 1 })}
-        onPressedChange={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-      >
-        <Heading1 className="h-4 w-4" />
-      </Toggle>
-      <Toggle
-        size="sm"
-        pressed={editor.isActive('heading', { level: 2 })}
-        onPressedChange={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-      >
-        <Heading2 className="h-4 w-4" />
-      </Toggle>
-      <Toggle
-        size="sm"
-        pressed={editor.isActive('heading', { level: 3 })}
-        onPressedChange={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-      >
-        <Heading3 className="h-4 w-4" />
-      </Toggle>
-      <Toggle
-        size="sm"
-        pressed={editor.isActive('heading', { level: 4 })}
-        onPressedChange={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
-      >
-        <Heading4 className="h-4 w-4" />
-      </Toggle>
+      <NodeSelector editor={editor} isOpen={nodeOpen} setIsOpen={setNodeOpen} />
       <Toggle size="sm" pressed={editor.isActive('bold')} onPressedChange={() => editor.chain().focus().toggleBold().run()}>
         <Bold className="h-4 w-4" />
       </Toggle>
@@ -73,9 +43,6 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
         <i className="ri-align-right"></i>
       </Toggle>
       <span className="px-2">|</span>
-      <Toggle size="sm" onClick={() => setHTML(editor.getHTML())}>
-        <i className="ri-preview"></i>
-      </Toggle>
     </div>
   )
 }

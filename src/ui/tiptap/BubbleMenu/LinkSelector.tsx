@@ -27,14 +27,7 @@ export const LinkSelector: FC<LinkSelectorProps> = ({ editor, isOpen, setIsOpen 
           setIsOpen(!isOpen)
         }}
       >
-        <p className="text-base">↗</p>
-        <p
-          className={cn('underline decoration-stone-400 underline-offset-4', {
-            'text-blue-500': editor.isActive('link'),
-          })}
-        >
-          Link
-        </p>
+        <i className="ri-link"></i>
       </button>
       {isOpen && (
         <form
