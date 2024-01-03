@@ -18,10 +18,11 @@ import {
   CheckSquare,
 } from 'lucide-react'
 import { toast } from 'sonner'
-// import { startImageUpload } from "@/ui/editor/plugins/upload-images";
 import { NovelContext } from '../provider'
 import { LoadingCircle, Magic } from '../icons'
+import va from '@vercel/analytics'
 import { getPrevText } from '../lib/editor'
+import { startImageUpload } from '../plugins/upload-images'
 
 interface CommandItemProps {
   title: string
@@ -151,27 +152,27 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       icon: <Code size={18} />,
       command: ({ editor, range }: CommandProps) => editor.chain().focus().deleteRange(range).toggleCodeBlock().run(),
     },
-    // {
-    //   title: "Image",
-    //   description: "Upload an image from your computer.",
-    //   searchTerms: ["photo", "picture", "media"],
-    //   icon: <ImageIcon size={18} />,
-    //   command: ({ editor, range }: CommandProps) => {
-    //     editor.chain().focus().deleteRange(range).run();
-    //     // upload image
-    //     const input = document.createElement("input");
-    //     input.type = "file";
-    //     input.accept = "image/*";
-    //     input.onchange = async () => {
-    //       if (input.files?.length) {
-    //         const file = input.files[0];
-    //         const pos = editor.view.state.selection.from;
-    //         startImageUpload(file, editor.view, pos);
-    //       }
-    //     };
-    //     input.click();
-    //   },
-    // },
+    {
+      title: 'Image',
+      description: 'Upload an image from your computer.',
+      searchTerms: ['photo', 'picture', 'media'],
+      icon: <ImageIcon size={18} />,
+      command: ({ editor, range }: CommandProps) => {
+        editor.chain().focus().deleteRange(range).run()
+        // upload image
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.accept = 'image/*'
+        input.onchange = async () => {
+          if (input.files?.length) {
+            const file = input.files[0]
+            const pos = editor.view.state.selection.from
+            startImageUpload(file, editor.view, pos)
+          }
+        }
+        input.click()
+      },
+    },
   ].filter((item) => {
     if (typeof query === 'string' && query.length > 0) {
       const search = query.toLowerCase()
@@ -210,7 +211,7 @@ const CommandList = ({ items, command, editor, range }: { items: CommandItemProp
     onResponse: (response) => {
       if (response.status === 429) {
         toast.error('You have reached your request limit for the day.')
-        // va.track("Rate Limit Reached");
+        va.track('Rate Limit Reached')
         return
       }
       editor.chain().focus().deleteRange(range).run()
@@ -230,9 +231,9 @@ const CommandList = ({ items, command, editor, range }: { items: CommandItemProp
   const selectItem = useCallback(
     (index: number) => {
       const item = items[index]
-      // va.track("Slash Command Used", {
-      //   command: item.title,
-      // });
+      va.track('Slash Command Used', {
+        command: item.title,
+      })
       if (item) {
         if (item.title === 'Continue writing') {
           if (isLoading) return

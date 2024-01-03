@@ -11,12 +11,12 @@ import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import { Markdown } from 'tiptap-markdown'
 import Highlight from '@tiptap/extension-highlight'
-import SlashCommand from './SlashCommand'
 import { InputRule } from '@tiptap/core'
+import SlashCommand from './SlashCommand'
 import DragAndDrop from './DragAndDrop'
 import CustomKeymap from './CustomKeymap'
 import UpdatedImage from './UpdatedImage'
-// import UpdatedImage from './UpdatedImage'
+import UploadImagesPlugin from '../plugins/upload-images'
 
 export const defaultExtensions = [
   StarterKit.configure({
@@ -84,6 +84,16 @@ export const defaultExtensions = [
   TiptapLink.configure({
     HTMLAttributes: {
       class: 'text-stone-400 underline underline-offset-[3px] hover:text-stone-600 transition-colors cursor-pointer',
+    },
+  }),
+  TiptapImage.extend({
+    addProseMirrorPlugins() {
+      return [UploadImagesPlugin()]
+    },
+  }).configure({
+    allowBase64: true,
+    HTMLAttributes: {
+      class: 'novel-rounded-lg novel-border novel-border-stone-200',
     },
   }),
   UpdatedImage.extend({
