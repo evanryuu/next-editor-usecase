@@ -30,6 +30,7 @@ const Tiptap: React.FC<TiptapProps> = (props) => {
   const debounceSetHTML = useDebounceFn((fn: () => string) => Promise.resolve().then(() => setHTML(fn())), { wait: 350 })
 
   const { complete, completion, isLoading, stop } = useCompletion({
+    id: 'novel',
     api: completionApi,
     onFinish: (_prompt, completion) => {
       editor?.commands.setTextSelection({

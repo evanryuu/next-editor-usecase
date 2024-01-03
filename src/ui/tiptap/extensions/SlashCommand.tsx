@@ -208,6 +208,7 @@ const CommandList = ({ items, command, editor, range }: { items: CommandItemProp
   const { completionApi } = useContext(NovelContext)
 
   const { complete, isLoading, completion } = useCompletion({
+    id: 'novel',
     api: completionApi,
     onResponse: (response) => {
       if (response.status === 429) {
@@ -228,15 +229,6 @@ const CommandList = ({ items, command, editor, range }: { items: CommandItemProp
       toast.error(e.message)
     },
   })
-
-  const prev = useRef('')
-
-  // Insert chunks of the generated text
-  useEffect(() => {
-    const diff = completion.slice(prev.current.length)
-    prev.current = completion
-    editor.commands.insertContent(diff)
-  }, [isLoading, editor, completion])
 
   const selectItem = useCallback(
     async (index: number) => {
