@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect, useCallback, ReactNode, useRef, useLayoutEffect, useContext } from 'react'
 import { Editor, Range, Extension } from '@tiptap/core'
 import Suggestion from '@tiptap/suggestion'

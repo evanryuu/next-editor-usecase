@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
-const editors = ['quill', 'tiptap', 'lexical', 'slate']
+const editors = ['tiptap', 'lexical']
 
 export default function Home() {
   return (
