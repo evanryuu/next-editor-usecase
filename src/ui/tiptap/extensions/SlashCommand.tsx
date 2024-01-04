@@ -364,7 +364,6 @@ const renderItems = () => {
     onKeyDown: (props: { event: KeyboardEvent }) => {
       if (props.event.key === 'Escape') {
         popup?.[0].hide()
-
         return true
       }
 

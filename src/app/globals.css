@@ -201,7 +201,15 @@
   width: 4px;
 }
 /* Basic editor styles */
-
+.tippy-box {
+  max-width: 400px !important;
+}
+.tippy-box[data-animation='fade'][data-state='hidden'] {
+  opacity: 0;
+}
+[data-tippy-root] {
+  max-width: calc(100vw - 10px);
+}
 [data-placeholder] {
   @apply text-neutral-300;
 }
