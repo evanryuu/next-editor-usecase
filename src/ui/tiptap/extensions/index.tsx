@@ -11,13 +11,12 @@ import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import { Markdown } from 'tiptap-markdown'
 import Highlight from '@tiptap/extension-highlight'
-import { InputRule } from '@tiptap/core'
+import { InputRule, Node } from '@tiptap/core'
 import SlashCommand from './SlashCommand'
 import DragAndDrop from './DragAndDrop'
 import CustomKeymap from './CustomKeymap'
 import UpdatedImage from './UpdatedImage'
 import UploadImagesPlugin from '../plugins/upload-images'
-
 export const defaultExtensions = [
   StarterKit.configure({
     bulletList: {

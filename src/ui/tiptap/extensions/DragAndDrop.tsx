@@ -87,26 +87,12 @@ function DragHandle(options: DragHandleOptions) {
 
     view.dispatch(view.state.tr.setSelection(NodeSelection.create(view.state.doc, nodePos)))
   }
+
   let dragHandleElement: HTMLElement | null = null
-  let hideTimeout: NodeJS.Timeout | null = null
 
-  function hideDragHandle(delay?: number) {
+  function hideDragHandle() {
     if (dragHandleElement) {
-      if (!delay) {
-        dragHandleElement.classList.add('opacity-0')
-      } else {
-        hideTimeout = setTimeout(() => {
-          hideDragHandle()
-          cancelHideDragHandle()
-        }, delay)
-      }
-    }
-  }
-
-  function cancelHideDragHandle() {
-    if (hideTimeout) {
-      clearTimeout(hideTimeout!)
-      hideTimeout = null
+      dragHandleElement.classList.add('opacity-0')
     }
   }
 
@@ -127,12 +113,6 @@ function DragHandle(options: DragHandleOptions) {
       })
       dragHandleElement.addEventListener('click', (e) => {
         handleClick(e, view)
-      })
-      dragHandleElement.addEventListener('mouseenter', (e) => {
-        cancelHideDragHandle()
-      })
-      dragHandleElement.addEventListener('mouseleave', (e) => {
-        hideDragHandle(300)
       })
 
       hideDragHandle()
@@ -181,16 +161,15 @@ function DragHandle(options: DragHandleOptions) {
 
           dragHandleElement.style.left = `${rect.left - rect.width}px`
           dragHandleElement.style.top = `${rect.top}px`
-          cancelHideDragHandle()
           showDragHandle()
-        },
-        mouseleave: () => {
-          hideDragHandle(300)
         },
         keydown: () => {
           hideDragHandle()
         },
         mousewheel: () => {
+          hideDragHandle()
+        },
+        scroll: () => {
           hideDragHandle()
         },
         // dragging class is used for CSS
