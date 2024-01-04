@@ -47,6 +47,12 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
       icon: StrikethroughIcon,
     },
     {
+      name: 'underline',
+      isActive: () => props.editor.isActive('underline'),
+      command: () => props.editor.chain().focus().toggleUnderline().run(),
+      icon: UnderlineIcon,
+    },
+    {
       name: 'code',
       isActive: () => props.editor.isActive('code'),
       command: () => props.editor.chain().focus().toggleCode().run(),

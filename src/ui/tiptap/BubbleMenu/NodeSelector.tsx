@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/core'
-import { Check, ChevronDown, Heading1, Heading2, Heading3, TextQuote, ListOrdered, TextIcon, Code, CheckSquare } from 'lucide-react'
+import { Check, ChevronDown, Heading1, Heading2, Heading3, TextQuote, ListOrdered, TextIcon, Code, CheckSquare, Code2 } from 'lucide-react'
 import * as Popover from '@radix-ui/react-popover'
 import { Dispatch, FC, SetStateAction } from 'react'
 import { BubbleMenuItem } from '.'
@@ -64,6 +64,12 @@ export const NodeSelector: FC<NodeSelectorProps> = ({ editor, isOpen, setIsOpen 
     {
       name: 'Code',
       icon: Code,
+      command: () => editor.chain().focus().toggleCode().run(),
+      isActive: () => editor.isActive('code'),
+    },
+    {
+      name: 'CodeBlock',
+      icon: Code2,
       command: () => editor.chain().focus().toggleCodeBlock().run(),
       isActive: () => editor.isActive('codeBlock'),
     },
@@ -75,7 +81,7 @@ export const NodeSelector: FC<NodeSelectorProps> = ({ editor, isOpen, setIsOpen 
 
   return (
     <Popover.Root open={isOpen}>
-      <div className="relative h-full">
+      <div className="relative h-full w-[110px]">
         <Popover.Trigger
           className="flex h-full items-center gap-1 whitespace-nowrap p-2 text-sm font-medium text-stone-600 hover:bg-stone-100 active:bg-stone-200"
           onClick={() => setIsOpen(!isOpen)}

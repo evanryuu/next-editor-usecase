@@ -1,7 +1,7 @@
 'use client'
 
 import { type Editor } from '@tiptap/react'
-import { Bold, Strikethrough, Italic } from 'lucide-react'
+import { Bold, Strikethrough, Italic, Underline, Code, Blocks, Code2 } from 'lucide-react'
 import { Toggle } from '@/ui/toggle'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { NodeSelector } from './BubbleMenu/NodeSelector'
@@ -42,6 +42,15 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
       </Toggle>
       <Toggle size="sm" pressed={editor.isActive('strike')} onPressedChange={() => editor.chain().focus().toggleStrike().run()}>
         <Strikethrough className="h-4 w-4" />
+      </Toggle>
+      <Toggle size="sm" pressed={editor.isActive('underline')} onPressedChange={() => editor.chain().focus().toggleUnderline().run()}>
+        <Underline className="h-4 w-4" />
+      </Toggle>
+      <Toggle size="sm" pressed={editor.isActive('code')} onPressedChange={() => editor.chain().focus().toggleCode().run()}>
+        <Code className="h-4 w-4" />
+      </Toggle>
+      <Toggle size="sm" pressed={editor.isActive('codeBlock')} onPressedChange={() => editor.chain().focus().toggleCodeBlock().run()}>
+        <Code2 className="h-4 w-4" />
       </Toggle>
       <Toggle size="sm" pressed={editor.isActive('link')} onPressedChange={() => setLinkOpen(true)}>
         <i className="ri-link"></i>
