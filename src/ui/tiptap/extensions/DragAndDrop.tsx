@@ -87,18 +87,32 @@ function DragHandle(options: DragHandleOptions) {
 
     view.dispatch(view.state.tr.setSelection(NodeSelection.create(view.state.doc, nodePos)))
   }
-
   let dragHandleElement: HTMLElement | null = null
+  let hideTimeout: NodeJS.Timeout | null = null
 
-  function hideDragHandle() {
+  function hideDragHandle(delay?: number) {
     if (dragHandleElement) {
-      dragHandleElement.classList.add('hidden')
+      if (!delay) {
+        dragHandleElement.classList.add('opacity-0')
+      } else {
+        hideTimeout = setTimeout(() => {
+          hideDragHandle()
+          cancelHideDragHandle()
+        }, delay)
+      }
+    }
+  }
+
+  function cancelHideDragHandle() {
+    if (hideTimeout) {
+      clearTimeout(hideTimeout!)
+      hideTimeout = null
     }
   }
 
   function showDragHandle() {
     if (dragHandleElement) {
-      dragHandleElement.classList.remove('hidden')
+      dragHandleElement.classList.remove('opacity-0')
     }
   }
 
@@ -107,12 +121,18 @@ function DragHandle(options: DragHandleOptions) {
       dragHandleElement = document.createElement('div')
       dragHandleElement.draggable = true
       dragHandleElement.dataset.dragHandle = ''
-      dragHandleElement.classList.add('drag-handle')
+      dragHandleElement.classList.add('drag-handle', 'opacity-1', 'transition-all', 'hover:bg-neutral-300')
       dragHandleElement.addEventListener('dragstart', (e) => {
         handleDragStart(e, view)
       })
       dragHandleElement.addEventListener('click', (e) => {
         handleClick(e, view)
+      })
+      dragHandleElement.addEventListener('mouseenter', (e) => {
+        cancelHideDragHandle()
+      })
+      dragHandleElement.addEventListener('mouseleave', (e) => {
+        hideDragHandle(300)
       })
 
       hideDragHandle()
@@ -161,7 +181,11 @@ function DragHandle(options: DragHandleOptions) {
 
           dragHandleElement.style.left = `${rect.left - rect.width}px`
           dragHandleElement.style.top = `${rect.top}px`
+          cancelHideDragHandle()
           showDragHandle()
+        },
+        mouseleave: () => {
+          hideDragHandle(300)
         },
         keydown: () => {
           hideDragHandle()

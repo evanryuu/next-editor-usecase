@@ -5,7 +5,8 @@ import { NodeSelector } from './NodeSelector'
 // import { ColorSelector } from './color-selector'
 import { LinkSelector } from './LinkSelector'
 import { cn } from '@/lib/utils'
-import { EditorProps } from '@/types'
+import { TextColorSelector } from './TextColorSelector'
+import { BgColorSelector } from './BgColorSelector'
 
 export interface BubbleMenuItem {
   name: string
@@ -71,14 +72,16 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
       moveTransition: 'transform 0.15s ease-out',
       onHidden: () => {
         setIsNodeSelectorOpen(false)
-        setIsColorSelectorOpen(false)
+        setIsTextColorSelectorOpen(false)
+        setIsBgColorSelectorOpen(false)
         setIsLinkSelectorOpen(false)
       },
     },
   }
 
   const [isNodeSelectorOpen, setIsNodeSelectorOpen] = useState(false)
-  const [isColorSelectorOpen, setIsColorSelectorOpen] = useState(false)
+  const [isTextColorSelectorOpen, setIsTextColorSelectorOpen] = useState(false)
+  const [isBgColorSelectorOpen, setIsBgColorSelectorOpen] = useState(false)
   const [isLinkSelectorOpen, setIsLinkSelectorOpen] = useState(false)
 
   return (
@@ -88,7 +91,8 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
         isOpen={isNodeSelectorOpen}
         setIsOpen={() => {
           setIsNodeSelectorOpen(!isNodeSelectorOpen)
-          setIsColorSelectorOpen(false)
+          setIsTextColorSelectorOpen(false)
+          setIsBgColorSelectorOpen(false)
           setIsLinkSelectorOpen(false)
         }}
       />
@@ -97,7 +101,8 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
         isOpen={isLinkSelectorOpen}
         setIsOpen={() => {
           setIsLinkSelectorOpen(!isLinkSelectorOpen)
-          setIsColorSelectorOpen(false)
+          setIsTextColorSelectorOpen(false)
+          setIsBgColorSelectorOpen(false)
           setIsNodeSelectorOpen(false)
         }}
       />
@@ -112,15 +117,26 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
           </button>
         ))}
       </div>
-      {/* <ColorSelector
+      <TextColorSelector
         editor={props.editor}
-        isOpen={isColorSelectorOpen}
+        isOpen={isTextColorSelectorOpen}
         setIsOpen={() => {
-          setIsColorSelectorOpen(!isColorSelectorOpen)
+          setIsTextColorSelectorOpen(!isTextColorSelectorOpen)
+          setIsBgColorSelectorOpen(false)
           setIsNodeSelectorOpen(false)
           setIsLinkSelectorOpen(false)
         }}
-      /> */}
+      />
+      <BgColorSelector
+        editor={props.editor}
+        isOpen={isBgColorSelectorOpen}
+        setIsOpen={() => {
+          setIsBgColorSelectorOpen(!isBgColorSelectorOpen)
+          setIsTextColorSelectorOpen(false)
+          setIsNodeSelectorOpen(false)
+          setIsLinkSelectorOpen(false)
+        }}
+      />
     </BubbleMenu>
   )
 }
