@@ -3,11 +3,12 @@
 import { type Editor } from '@tiptap/react'
 import { Bold, Strikethrough, Italic, Underline, Code, Blocks, Code2 } from 'lucide-react'
 import { Toggle } from '@/ui/toggle'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { NodeSelector } from './BubbleMenu/NodeSelector'
 import { TextColorSelector } from './BubbleMenu/TextColorSelector'
 import { BgColorSelector } from './BubbleMenu/BgColorSelector'
 import { InsertSelector } from './BubbleMenu/InsertSelector'
+import { useClickAway } from 'ahooks'
 
 interface Props {
   editor?: Editor
@@ -15,25 +16,35 @@ interface Props {
 
 const Toolbar: React.FC<Props> = ({ editor }) => {
   const [linkOpen, setLinkOpen] = useState(false)
-  const [nodeOpen, setNodeOpen] = useState(false)
+  const [inToolbar, setInToolbar] = useState(false)
+  const [isNodeSelectorOpen, setIsNodeSelectorOpen] = useState(false)
   const [isTextColorSelectorOpen, setIsTextColorSelectorOpen] = useState(false)
   const [isBgColorSelectorOpen, setIsBgColorSelectorOpen] = useState(false)
   const [isInsertSelectorOpen, setIsInsertSelectorOpen] = useState(false)
+  const toolbarRef = useRef<HTMLDivElement | null>(null)
+
+  useClickAway(() => {
+    if (inToolbar) {
+      setThisOpen()
+      setInToolbar(false)
+    }
+  }, [toolbarRef])
 
   const setThisOpen = (state?: boolean, dispatch?: Dispatch<SetStateAction<boolean>>) => {
-    const methods = [setIsTextColorSelectorOpen, setIsBgColorSelectorOpen, setIsInsertSelectorOpen]
+    const methods = [setIsNodeSelectorOpen, setIsTextColorSelectorOpen, setIsBgColorSelectorOpen, setIsInsertSelectorOpen]
     if (dispatch) {
       dispatch(!state)
     }
     methods.filter((fn) => fn !== dispatch).forEach((fn) => fn(false))
   }
+
   if (!editor) {
     return null
   }
 
   return (
-    <div className="border bg-transparent flex items-center py-1 px-2">
-      <NodeSelector editor={editor} isOpen={nodeOpen} setIsOpen={setNodeOpen} />
+    <div className="border bg-transparent flex items-center py-1 px-2 flex-wrap" ref={toolbarRef} onClick={() => setInToolbar(true)}>
+      <NodeSelector editor={editor} isOpen={isNodeSelectorOpen} setIsOpen={() => setThisOpen(isNodeSelectorOpen, setIsNodeSelectorOpen)} />
       <Toggle size="sm" pressed={editor.isActive('bold')} onPressedChange={() => editor.chain().focus().toggleBold().run()}>
         <Bold className="h-4 w-4" />
       </Toggle>

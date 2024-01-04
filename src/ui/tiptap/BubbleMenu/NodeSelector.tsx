@@ -81,9 +81,9 @@ export const NodeSelector: FC<NodeSelectorProps> = ({ editor, isOpen, setIsOpen 
 
   return (
     <Popover.Root open={isOpen}>
-      <div className="relative h-full w-[110px]">
+      <div className="relative h-full flex items-center justify-center w-[110px]">
         <Popover.Trigger
-          className="flex h-full items-center gap-1 whitespace-nowrap p-2 text-sm font-medium text-stone-600 hover:bg-stone-100 active:bg-stone-200"
+          className="flex h-full justify-center items-center gap-1 whitespace-nowrap p-2 text-sm font-medium text-stone-600 hover:bg-stone-100 active:bg-stone-200"
           onClick={() => setIsOpen(!isOpen)}
         >
           <span>{activeItem?.name}</span>

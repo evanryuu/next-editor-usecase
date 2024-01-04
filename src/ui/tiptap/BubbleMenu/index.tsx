@@ -1,5 +1,5 @@
 import { BubbleMenu, BubbleMenuProps, Editor, isNodeSelection } from '@tiptap/react'
-import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useCallback, useState } from 'react'
 import { BoldIcon, ItalicIcon, UnderlineIcon, StrikethroughIcon, CodeIcon } from 'lucide-react'
 import { NodeSelector } from './NodeSelector'
 // import { ColorSelector } from './color-selector'
@@ -89,19 +89,22 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
   const [isLinkSelectorOpen, setIsLinkSelectorOpen] = useState(false)
   const [isInsertSelectorOpen, setIsInsertSelectorOpen] = useState(false)
 
-  const setThisOpen = (state?: boolean, dispatch?: Dispatch<SetStateAction<boolean>>) => {
-    const methods = [
-      setIsNodeSelectorOpen,
-      setIsTextColorSelectorOpen,
-      setIsBgColorSelectorOpen,
-      setIsLinkSelectorOpen,
-      setIsInsertSelectorOpen,
-    ]
-    if (dispatch) {
-      dispatch(!state)
-    }
-    methods.filter((fn) => fn !== dispatch).forEach((fn) => fn(false))
-  }
+  const setThisOpen = useCallback(
+    (state?: boolean, dispatch?: Dispatch<SetStateAction<boolean>>) => {
+      const methods = [
+        setIsNodeSelectorOpen,
+        setIsTextColorSelectorOpen,
+        setIsBgColorSelectorOpen,
+        setIsLinkSelectorOpen,
+        setIsInsertSelectorOpen,
+      ]
+      if (dispatch) {
+        dispatch(!state)
+      }
+      methods.filter((fn) => fn !== dispatch).forEach((fn) => fn(false))
+    },
+    [setIsNodeSelectorOpen, setIsTextColorSelectorOpen, setIsBgColorSelectorOpen, setIsLinkSelectorOpen, setIsInsertSelectorOpen],
+  )
 
   return (
     <BubbleMenu {...bubbleMenuProps} className="flex w-fit divide-x divide-stone-200 rounded border border-stone-200 bg-white shadow-xl">
