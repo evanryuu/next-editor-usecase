@@ -68,12 +68,6 @@ function linkHoverHandler() {
             }
           })
           input.className = 'bg-red-50 p-1 rounded-lg'
-          // tippy(node, {
-          //   allowHTML: true,
-          //   interactive: true,
-          //   animation: 'fade',
-          //   content: input,
-          // })
           if (popup) {
             popup?.[0].destroy()
             popup = null

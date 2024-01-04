@@ -2,14 +2,16 @@ import { getUrlFromString } from '@/shared/url'
 import { BubbleMenu } from '@tiptap/react'
 import { Editor } from '@tiptap/react'
 import { CheckCheck, Trash } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 
 const LinkHoverMenu = ({ editor }: { editor: Editor }) => {
   const inputRef = useRef<HTMLInputElement>(null)
+  const leave = useRef(false)
 
   // Autofocus on input by default
   useEffect(() => {
     inputRef.current && inputRef.current?.focus()
+    leave.current = false
   })
   return (
     <BubbleMenu
@@ -18,10 +20,16 @@ const LinkHoverMenu = ({ editor }: { editor: Editor }) => {
       editor={editor}
       shouldShow={({ editor, from, to }) => {
         // only show the bubble menu for links.
-        return from === to && editor.isActive('link')
+        return from === to && editor.isActive('link') && !leave.current
       }}
     >
       <form
+        onKeyDownCapture={(e) => {
+          if (e.code === 'Enter' || e.code === 'Escape') {
+            leave.current = true
+            console.log(e.code)
+          }
+        }}
         onSubmit={(e) => {
           e.preventDefault()
           const input = e.currentTarget[0] as HTMLInputElement
