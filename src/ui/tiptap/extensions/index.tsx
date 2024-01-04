@@ -25,17 +25,17 @@ export const defaultExtensions = [
   StarterKit.configure({
     bulletList: {
       HTMLAttributes: {
-        class: 'list-disc list-outside leading-3 -mt-2',
+        class: 'list-disc list-outside leading-3',
       },
     },
     orderedList: {
       HTMLAttributes: {
-        class: 'list-decimal list-outside leading-3 -mt-2',
+        class: 'list-decimal list-outside leading-3',
       },
     },
     listItem: {
       HTMLAttributes: {
-        class: 'leading-normal -mb-2',
+        class: 'leading-normal',
       },
     },
     blockquote: {
