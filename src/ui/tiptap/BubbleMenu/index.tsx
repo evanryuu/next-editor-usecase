@@ -64,7 +64,7 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
       // - the selected node is an image
       // - the selection is empty
       // - the selection is a node selection (for drag handles)
-      if (editor.isActive('image') || empty || isNodeSelection(selection) || editor.isActive('link')) {
+      if (editor.isActive('image') || empty || isNodeSelection(selection) || editor.isActive('link') || editor.isActive('table')) {
         return false
       }
       return true

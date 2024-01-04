@@ -15,7 +15,7 @@ import Table from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
-import { InputRule, Node } from '@tiptap/core'
+import { InputRule, Node, mergeAttributes } from '@tiptap/core'
 import SlashCommand from './SlashCommand'
 import DragAndDrop from './DragAndDrop'
 import CustomKeymap from './CustomKeymap'
@@ -123,8 +123,28 @@ export const defaultExtensions = [
   }),
   Gapcursor,
   TableRow,
-  TableHeader,
-  TableCell,
+  TableHeader.extend({
+    renderHTML({ HTMLAttributes }) {
+      const attrs = mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)
+
+      if (attrs.colwidth) {
+        attrs.style = `width: ${attrs.colwidth}px`
+      }
+
+      return ['th', attrs, 0]
+    },
+  }),
+  TableCell.extend({
+    renderHTML({ HTMLAttributes }) {
+      const attrs = mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)
+
+      if (attrs.colwidth) {
+        attrs.style = `width: ${attrs.colwidth}px`
+      }
+
+      return ['td', attrs, 0]
+    },
+  }),
   SlashCommand,
   TiptapUnderline,
   TextStyle,

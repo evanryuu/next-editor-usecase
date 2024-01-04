@@ -11,14 +11,17 @@ interface InsertSelectorProps {
 }
 
 export const InsertSelector: FC<InsertSelectorProps> = ({ editor, isOpen, setIsOpen }) => {
-  const items: Omit<BubbleMenuItem, 'isActive'>[] = [
+  const items: BubbleMenuItem[] = [
     {
       name: 'Table',
       icon: TextIcon,
       command: () => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+      isActive: () => editor.isActive('table'),
     },
   ]
-
+  const activeItem = items.filter((item) => item.isActive()).pop() ?? {
+    name: '+ Insert',
+  }
   return (
     <Popover.Root open={isOpen}>
       <div className="relative h-full">
@@ -26,7 +29,7 @@ export const InsertSelector: FC<InsertSelectorProps> = ({ editor, isOpen, setIsO
           className="flex h-full items-center gap-1 whitespace-nowrap p-2 text-sm font-medium text-stone-600 hover:bg-stone-100 active:bg-stone-200"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span>+ Insert</span>
+          <span>{activeItem?.name}</span>
           <ChevronDown className="h-4 w-4" />
         </Popover.Trigger>
 
