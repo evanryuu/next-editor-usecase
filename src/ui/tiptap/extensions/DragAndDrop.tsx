@@ -138,7 +138,7 @@ function DragHandle(options: DragHandleOptions) {
             y: event.clientY,
           })
 
-          if (!(node instanceof Element) || node.matches('ul, ol')) {
+          if (!(node instanceof Element) || node.matches('ul, ol, table')) {
             hideDragHandle()
             return
           }

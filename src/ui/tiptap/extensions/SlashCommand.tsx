@@ -18,6 +18,7 @@ import {
   Image as ImageIcon,
   Code,
   CheckSquare,
+  Table,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { NovelContext } from '../provider'
@@ -148,6 +149,14 @@ const getSuggestionItems = ({ query }: { query: string }) => {
         editor.chain().focus().deleteRange(range).toggleNode('paragraph', 'paragraph').toggleBlockquote().run(),
     },
     {
+      title: 'Table',
+      description: 'Create a table.',
+      searchTerms: ['table'],
+      icon: <Table size={18} />,
+      command: ({ editor, range }: CommandProps) =>
+        editor.chain().focus().deleteRange(range).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+    },
+    {
       title: 'Code',
       description: 'Capture a code snippet.',
       searchTerms: ['codeblock'],
@@ -207,7 +216,7 @@ const CommandList = ({ items, command, editor, range }: { items: CommandItemProp
 
   const { completionApi } = useContext(NovelContext)
 
-  const { complete, isLoading, completion } = useCompletion({
+  const { complete, isLoading } = useCompletion({
     id: 'novel',
     api: completionApi,
     onResponse: (response) => {

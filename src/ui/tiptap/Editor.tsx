@@ -10,11 +10,12 @@ import { ImageResizer } from './extensions/ImageResizer'
 import { defaultEditorProps } from './props'
 import { defaultExtensions } from './extensions'
 import { getPrevText } from './lib/editor'
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useCompletion } from 'ai/react'
 import { NovelContext } from './provider'
 import { toast } from 'sonner'
 import va from '@vercel/analytics'
+import LinkHoverMenu from './extensions/LinkHoverMenu'
 
 // import Heading from '@tiptap/extension-heading'
 
@@ -106,6 +107,7 @@ const Tiptap: React.FC<TiptapProps> = (props) => {
     <div className={props.className}>
       {editor && <Toolbar editor={editor} />}
       {editor && <TiptapBubbleMenu editor={editor} />}
+      {editor && <LinkHoverMenu editor={editor} />}
       {editor?.isActive('image') && <ImageResizer editor={editor} />}
       <EditorContent className={props.editorClassName} editor={editor} />
     </div>

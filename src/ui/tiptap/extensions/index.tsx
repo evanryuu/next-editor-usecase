@@ -1,6 +1,5 @@
 import StarterKit from '@tiptap/starter-kit'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
-import TiptapLink from '@tiptap/extension-link'
 import TiptapImage from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
 import TiptapUnderline from '@tiptap/extension-underline'
@@ -11,12 +10,17 @@ import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import { Markdown } from 'tiptap-markdown'
 import Highlight from '@tiptap/extension-highlight'
+import Gapcursor from '@tiptap/extension-gapcursor'
+import Table from '@tiptap/extension-table'
+import TableCell from '@tiptap/extension-table-cell'
+import TableHeader from '@tiptap/extension-table-header'
+import TableRow from '@tiptap/extension-table-row'
 import { InputRule, Node } from '@tiptap/core'
 import SlashCommand from './SlashCommand'
 import DragAndDrop from './DragAndDrop'
 import CustomKeymap from './CustomKeymap'
-import UpdatedImage from './UpdatedImage'
 import UploadImagesPlugin from '../plugins/upload-images'
+import { CustomLink } from './CustomLink'
 export const defaultExtensions = [
   StarterKit.configure({
     bulletList: {
@@ -80,25 +84,23 @@ export const defaultExtensions = [
       class: 'mt-4 mb-6 border-t border-stone-300',
     },
   }),
-  TiptapLink.configure({
-    HTMLAttributes: {
-      class: 'text-stone-400 underline underline-offset-[3px] hover:text-stone-600 transition-colors cursor-pointer',
-    },
-  }),
+  CustomLink,
+  // LinkHover,
   TiptapImage.extend({
+    addAttributes() {
+      return {
+        ...this.parent?.(),
+        width: {
+          default: null,
+        },
+        height: {
+          default: null,
+        },
+      }
+    },
     addProseMirrorPlugins() {
       return [UploadImagesPlugin()]
     },
-  }).configure({
-    allowBase64: true,
-    HTMLAttributes: {
-      class: 'novel-rounded-lg novel-border novel-border-stone-200',
-    },
-  }),
-  UpdatedImage.extend({
-    // addProseMirrorPlugins() {
-    //   return [UploadImagesPlugin()]
-    // },
   }).configure({
     allowBase64: true,
     HTMLAttributes: {
@@ -106,14 +108,23 @@ export const defaultExtensions = [
     },
   }),
   Placeholder.configure({
-    placeholder: ({ node }) => {
+    includeChildren: true,
+    placeholder: ({ editor, node }) => {
       if (node.type.name === 'heading') {
         return `Heading ${node.attrs.level}`
+      } else if (!editor.isActive('table')) {
+        return "Press '/' for commands, or '++' for AI autocomplete..."
       }
-      return "Press '/' for commands, or '++' for AI autocomplete..."
+      return ''
     },
-    includeChildren: true,
   }),
+  Table.configure({
+    resizable: true,
+  }),
+  Gapcursor,
+  TableRow,
+  TableHeader,
+  TableCell,
   SlashCommand,
   TiptapUnderline,
   TextStyle,

@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils'
 import { getUrlFromString } from '@/shared/url'
 import { Editor } from '@tiptap/core'
 import { Check, Trash } from 'lucide-react'

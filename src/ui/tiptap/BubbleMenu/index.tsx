@@ -1,5 +1,5 @@
 import { BubbleMenu, BubbleMenuProps, Editor, isNodeSelection } from '@tiptap/react'
-import { FC, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
 import { BoldIcon, ItalicIcon, UnderlineIcon, StrikethroughIcon, CodeIcon } from 'lucide-react'
 import { NodeSelector } from './NodeSelector'
 // import { ColorSelector } from './color-selector'
@@ -7,6 +7,7 @@ import { LinkSelector } from './LinkSelector'
 import { cn } from '@/lib/utils'
 import { TextColorSelector } from './TextColorSelector'
 import { BgColorSelector } from './BgColorSelector'
+import { InsertSelector } from './InsertSelector'
 
 export interface BubbleMenuItem {
   name: string
@@ -63,7 +64,7 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
       // - the selected node is an image
       // - the selection is empty
       // - the selection is a node selection (for drag handles)
-      if (editor.isActive('image') || empty || isNodeSelection(selection)) {
+      if (editor.isActive('image') || empty || isNodeSelection(selection) || editor.isActive('link')) {
         return false
       }
       return true
@@ -71,10 +72,7 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
     tippyOptions: {
       moveTransition: 'transform 0.15s ease-out',
       onHidden: () => {
-        setIsNodeSelectorOpen(false)
-        setIsTextColorSelectorOpen(false)
-        setIsBgColorSelectorOpen(false)
-        setIsLinkSelectorOpen(false)
+        setThisOpen()
       },
     },
   }
@@ -83,28 +81,33 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
   const [isTextColorSelectorOpen, setIsTextColorSelectorOpen] = useState(false)
   const [isBgColorSelectorOpen, setIsBgColorSelectorOpen] = useState(false)
   const [isLinkSelectorOpen, setIsLinkSelectorOpen] = useState(false)
+  const [isInsertSelectorOpen, setIsInsertSelectorOpen] = useState(false)
+
+  const setThisOpen = (state?: boolean, dispatch?: Dispatch<SetStateAction<boolean>>) => {
+    const methods = [
+      setIsNodeSelectorOpen,
+      setIsTextColorSelectorOpen,
+      setIsBgColorSelectorOpen,
+      setIsLinkSelectorOpen,
+      setIsInsertSelectorOpen,
+    ]
+    if (dispatch) {
+      dispatch(!state)
+    }
+    methods.filter((fn) => fn !== dispatch).forEach((fn) => fn(false))
+  }
 
   return (
     <BubbleMenu {...bubbleMenuProps} className="flex w-fit divide-x divide-stone-200 rounded border border-stone-200 bg-white shadow-xl">
       <NodeSelector
         editor={props.editor}
         isOpen={isNodeSelectorOpen}
-        setIsOpen={() => {
-          setIsNodeSelectorOpen(!isNodeSelectorOpen)
-          setIsTextColorSelectorOpen(false)
-          setIsBgColorSelectorOpen(false)
-          setIsLinkSelectorOpen(false)
-        }}
+        setIsOpen={() => setThisOpen(isNodeSelectorOpen, setIsNodeSelectorOpen)}
       />
       <LinkSelector
         editor={props.editor}
         isOpen={isLinkSelectorOpen}
-        setIsOpen={() => {
-          setIsLinkSelectorOpen(!isLinkSelectorOpen)
-          setIsTextColorSelectorOpen(false)
-          setIsBgColorSelectorOpen(false)
-          setIsNodeSelectorOpen(false)
-        }}
+        setIsOpen={() => setThisOpen(isLinkSelectorOpen, setIsLinkSelectorOpen)}
       />
       <div className="flex">
         {items.map((item, index) => (
@@ -120,22 +123,17 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
       <TextColorSelector
         editor={props.editor}
         isOpen={isTextColorSelectorOpen}
-        setIsOpen={() => {
-          setIsTextColorSelectorOpen(!isTextColorSelectorOpen)
-          setIsBgColorSelectorOpen(false)
-          setIsNodeSelectorOpen(false)
-          setIsLinkSelectorOpen(false)
-        }}
+        setIsOpen={() => setThisOpen(isTextColorSelectorOpen, setIsTextColorSelectorOpen)}
       />
       <BgColorSelector
         editor={props.editor}
         isOpen={isBgColorSelectorOpen}
-        setIsOpen={() => {
-          setIsBgColorSelectorOpen(!isBgColorSelectorOpen)
-          setIsTextColorSelectorOpen(false)
-          setIsNodeSelectorOpen(false)
-          setIsLinkSelectorOpen(false)
-        }}
+        setIsOpen={() => setThisOpen(isBgColorSelectorOpen, setIsBgColorSelectorOpen)}
+      />
+      <InsertSelector
+        editor={props.editor}
+        isOpen={isInsertSelectorOpen}
+        setIsOpen={() => setThisOpen(isInsertSelectorOpen, setIsInsertSelectorOpen)}
       />
     </BubbleMenu>
   )

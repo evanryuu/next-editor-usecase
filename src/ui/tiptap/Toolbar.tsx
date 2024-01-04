@@ -3,10 +3,11 @@
 import { type Editor } from '@tiptap/react'
 import { Bold, Strikethrough, Italic } from 'lucide-react'
 import { Toggle } from '@/ui/toggle'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { NodeSelector } from './BubbleMenu/NodeSelector'
 import { TextColorSelector } from './BubbleMenu/TextColorSelector'
 import { BgColorSelector } from './BubbleMenu/BgColorSelector'
+import { InsertSelector } from './BubbleMenu/InsertSelector'
 
 interface Props {
   editor?: Editor
@@ -17,7 +18,15 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
   const [nodeOpen, setNodeOpen] = useState(false)
   const [isTextColorSelectorOpen, setIsTextColorSelectorOpen] = useState(false)
   const [isBgColorSelectorOpen, setIsBgColorSelectorOpen] = useState(false)
+  const [isInsertSelectorOpen, setIsInsertSelectorOpen] = useState(false)
 
+  const setThisOpen = (state?: boolean, dispatch?: Dispatch<SetStateAction<boolean>>) => {
+    const methods = [setIsTextColorSelectorOpen, setIsBgColorSelectorOpen, setIsInsertSelectorOpen]
+    if (dispatch) {
+      dispatch(!state)
+    }
+    methods.filter((fn) => fn !== dispatch).forEach((fn) => fn(false))
+  }
   if (!editor) {
     return null
   }
@@ -51,18 +60,18 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
       <TextColorSelector
         editor={editor}
         isOpen={isTextColorSelectorOpen}
-        setIsOpen={() => {
-          setIsTextColorSelectorOpen(!isTextColorSelectorOpen)
-          setIsBgColorSelectorOpen(false)
-        }}
+        setIsOpen={() => setThisOpen(isTextColorSelectorOpen, setIsTextColorSelectorOpen)}
       />
       <BgColorSelector
         editor={editor}
         isOpen={isBgColorSelectorOpen}
-        setIsOpen={() => {
-          setIsBgColorSelectorOpen(!isBgColorSelectorOpen)
-          setIsTextColorSelectorOpen(false)
-        }}
+        setIsOpen={() => setThisOpen(isBgColorSelectorOpen, setIsBgColorSelectorOpen)}
+      />
+      <span className="px-2 text-neutral-300">|</span>
+      <InsertSelector
+        editor={editor}
+        isOpen={isInsertSelectorOpen}
+        setIsOpen={() => setThisOpen(isInsertSelectorOpen, setIsInsertSelectorOpen)}
       />
     </div>
   )
