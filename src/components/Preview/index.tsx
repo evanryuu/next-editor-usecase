@@ -6,7 +6,7 @@ interface PreviewProps {
 const Preview: React.FC<PreviewProps> = ({ html, className }) => {
   return (
     <div
-      className={`${className} bg-white border-l `}
+      className={`${className} border-l `}
       dangerouslySetInnerHTML={{
         __html: html,
       }}

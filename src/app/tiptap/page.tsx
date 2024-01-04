@@ -11,7 +11,7 @@ export default function Page() {
   return (
     <div className="min-h-[100vh] flex">
       <TiptapEditor editorClassName="[&>*:first-child]:py-8 [&>*:first-child]:px-12" className="flex-1 h-full" />
-      <Preview className="flex-1 py-8 px-12" html={html} />
+      <Preview className="flex-1 py-8 px-12 bg-transparent" html={html} />
     </div>
   )
 }

@@ -178,6 +178,7 @@ function DragHandle(options: DragHandleOptions) {
         },
         drop: (view) => {
           view.dom.classList.remove('dragging')
+          view.dispatch(view.state.tr.deleteSelection())
         },
         dragend: (view) => {
           view.dom.classList.remove('dragging')
