@@ -118,7 +118,9 @@ export const defaultExtensions = [
   SlashCommand,
   TiptapUnderline,
   TextStyle,
-  TextAlign,
+  TextAlign.configure({
+    types: ['heading', 'paragraph'],
+  }),
   Color,
   Highlight.configure({
     multicolor: true,
