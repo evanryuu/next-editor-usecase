@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core'
 import { Check, ChevronDown, Heading1, Heading2, Heading3, TextQuote, ListOrdered, TextIcon, Code, CheckSquare, Code2 } from 'lucide-react'
 import * as Popover from '@radix-ui/react-popover'
 import { Dispatch, FC, SetStateAction } from 'react'
-import { BubbleMenuItem } from '.'
+import { BubbleMenuItem } from '../BubbleMenu'
 
 interface NodeSelectorProps {
   editor: Editor

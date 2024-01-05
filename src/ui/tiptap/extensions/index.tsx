@@ -3,6 +3,7 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import TiptapImage from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
 import TiptapUnderline from '@tiptap/extension-underline'
+import FontFamily from '@tiptap/extension-font-family'
 import TextStyle from '@tiptap/extension-text-style'
 import TextAlign from '@tiptap/extension-text-align'
 import { Color } from '@tiptap/extension-color'
@@ -10,17 +11,16 @@ import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import { Markdown } from 'tiptap-markdown'
 import Highlight from '@tiptap/extension-highlight'
-import Gapcursor from '@tiptap/extension-gapcursor'
-import Table from '@tiptap/extension-table'
-import TableCell from '@tiptap/extension-table-cell'
-import TableHeader from '@tiptap/extension-table-header'
-import TableRow from '@tiptap/extension-table-row'
 import { InputRule, Node, mergeAttributes } from '@tiptap/core'
 import SlashCommand from './SlashCommand'
 import DragAndDrop from './DragAndDrop'
 import CustomKeymap from './CustomKeymap'
 import UploadImagesPlugin from '../plugins/upload-images'
 import { CustomLink } from './CustomLink'
+import { HoverExtension } from './HoverExtension'
+import DraggableItem from './DraggableItem'
+import Paragraph from '@tiptap/extension-paragraph'
+import tableExtensions from './TableExtension'
 export const defaultExtensions = [
   StarterKit.configure({
     bulletList: {
@@ -40,7 +40,7 @@ export const defaultExtensions = [
     },
     blockquote: {
       HTMLAttributes: {
-        class: 'border-l-4 border-stone-700',
+        class: 'border-l-4 border-stone-400 text-stone-400',
       },
     },
     codeBlock: {
@@ -61,6 +61,12 @@ export const defaultExtensions = [
     },
     gapcursor: false,
   }),
+  Paragraph.extend().configure({
+    HTMLAttributes: {
+      'data-type': 'draggable-item',
+    },
+  }),
+  ...tableExtensions,
   // patch to fix horizontal rule bug: https://github.com/ueberdosis/tiptap/pull/3859#issuecomment-1536799740
   HorizontalRule.extend({
     addInputRules() {
@@ -87,6 +93,7 @@ export const defaultExtensions = [
   CustomLink,
   // LinkHover,
   TiptapImage.extend({
+    draggable: true,
     addAttributes() {
       return {
         ...this.parent?.(),
@@ -118,36 +125,13 @@ export const defaultExtensions = [
       return ''
     },
   }),
-  Table.configure({
-    resizable: true,
-  }),
-  Gapcursor,
-  TableRow,
-  TableHeader.extend({
-    renderHTML({ HTMLAttributes }) {
-      const attrs = mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)
 
-      if (attrs.colwidth) {
-        attrs.style = `width: ${attrs.colwidth}px`
-      }
-
-      return ['th', attrs, 0]
-    },
-  }),
-  TableCell.extend({
-    renderHTML({ HTMLAttributes }) {
-      const attrs = mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)
-
-      if (attrs.colwidth) {
-        attrs.style = `width: ${attrs.colwidth}px`
-      }
-
-      return ['td', attrs, 0]
-    },
-  }),
   SlashCommand,
   TiptapUnderline,
   TextStyle,
+  FontFamily.configure({
+    types: ['textStyle'],
+  }),
   TextAlign.configure({
     types: ['heading', 'paragraph'],
   }),
@@ -172,5 +156,7 @@ export const defaultExtensions = [
     transformPastedText: true,
   }),
   CustomKeymap,
+  HoverExtension,
   DragAndDrop,
+  // DraggableItem,
 ]

@@ -1,4 +1,4 @@
-import { Mark } from '@tiptap/core'
+import { Mark, mergeAttributes } from '@tiptap/core'
 import Link from '@tiptap/extension-link'
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { EditorView } from '@tiptap/pm/view'
@@ -39,60 +39,6 @@ function linkHoverHandler() {
       }
     },
     props: {
-      handleDOMEvents: {
-        mouseover: (view, e) => {
-          e.stopPropagation()
-          e.preventDefault()
-          const node = nodeDOMAtCoords({
-            x: e.clientX,
-            y: e.clientY,
-          })!
-          if (!(node instanceof Element) || !node.matches('a')) {
-            return
-          }
-          console.log(node)
-          const input = document.createElement('input')
-          input.value = node.getAttribute('href')!
-          input.addEventListener('keydown', function (e) {
-            if (e.code === 'Escape') {
-              console.log('should blur')
-              popup?.[0].destroy()
-            } else if (e.code === 'Enter') {
-              console.log(this.value)
-              // node.setAttribute('href', this.value)
-              const pos = nodePosAtDOM(node, view)
-              if (pos != null) {
-                view.state.tr.setNodeAttribute(pos, 'href', this.value)
-              }
-              popup?.[0].destroy()
-            }
-          })
-          input.className = 'bg-red-50 p-1 rounded-lg'
-          if (popup) {
-            popup?.[0].destroy()
-            popup = null
-          }
-          // @ts-ignore
-          popup = tippy('body', {
-            getReferenceClientRect: node.getBoundingClientRect.bind(node),
-            appendTo: () => document.body,
-            content: input,
-            showOnCreate: true,
-            interactive: true,
-            trigger: 'manual',
-            placement: 'bottom-start',
-          })
-          input.focus()
-          // if (node.tagName === 'A') {
-          //   node.classList.add('hello-there')
-          //   // tippy(node, {
-          //   //   content: 'My Tooltip!',
-          //   // })
-          // } else {
-          //   node.classList.remove('hello-there')
-          // }
-        },
-      },
       // handleDOMEvents: (view, pos, event) => {
       //   var _a, _b
       //   if (event.button !== 0) {
@@ -121,6 +67,9 @@ function linkHoverHandler() {
 
 export const CustomLink = Link.extend({
   inclusive: false,
+  renderHTML: ({ HTMLAttributes, mark }) => {
+    return ['a', mergeAttributes(HTMLAttributes, { 'data-link': mark.attrs.href || '' })]
+  },
   // addProseMirrorPlugins() {
   //   return [linkHoverHandler()]
   // },

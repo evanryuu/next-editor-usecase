@@ -1,8 +1,8 @@
 'use client'
 
 import { useEditor, EditorContent } from '@tiptap/react'
-import Toolbar from './Toolbar'
-import TiptapBubbleMenu from './BubbleMenu/index'
+import Toolbar from './extensions/Toolbar/Toolbar'
+import TiptapBubbleMenu from './extensions/BubbleMenu'
 import './ProseMirror.css'
 import { useAppStore } from '@/store'
 import { useDebounceFn, useRafInterval } from 'ahooks'
@@ -15,7 +15,9 @@ import { useCompletion } from 'ai/react'
 import { NovelContext } from './provider'
 import { toast } from 'sonner'
 import va from '@vercel/analytics'
-import LinkHoverMenu from './extensions/LinkHoverMenu'
+import LinkHoverMenu from './extensions/FloatingLinkEditMenu'
+import { LinkActionsMenu } from './extensions/LinkAction/LinkActionsMenu'
+import FloatingLinkEditMenu from './extensions/FloatingLinkEditMenu'
 
 // import Heading from '@tiptap/extension-heading'
 
@@ -28,6 +30,7 @@ interface TiptapProps {
 const Tiptap: React.FC<TiptapProps> = (props) => {
   const { html, setHTML } = useAppStore()
   const { completionApi } = useContext(NovelContext)
+  const [isLinkEditMode, setIsLinkEditMode] = useState(false)
   const debounceSetHTML = useDebounceFn((fn: () => string) => Promise.resolve().then(() => setHTML(fn())), { wait: 350 })
 
   const { complete, completion, isLoading, stop } = useCompletion({
@@ -105,9 +108,10 @@ const Tiptap: React.FC<TiptapProps> = (props) => {
   }, [stop, isLoading, editor, complete, completion.length])
   return (
     <div className={props.className}>
-      {editor && <Toolbar editor={editor} />}
+      {editor && <Toolbar editor={editor} setIsLinkEditMode={setIsLinkEditMode} />}
       {editor && <TiptapBubbleMenu editor={editor} />}
-      {editor && <LinkHoverMenu editor={editor} />}
+      {editor && <LinkActionsMenu editor={editor} />}
+      {editor && <FloatingLinkEditMenu editor={editor} isLinkEditMode={isLinkEditMode} setIsLinkEditMode={setIsLinkEditMode} />}
       {editor?.isActive('image') && <ImageResizer editor={editor} />}
       <EditorContent className={props.editorClassName} editor={editor} />
     </div>

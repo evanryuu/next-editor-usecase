@@ -1,10 +1,18 @@
 import { getUrlFromString } from '@/shared/url'
-import { BubbleMenu } from '@tiptap/react'
+import { BubbleMenu, FloatingMenu } from '@tiptap/react'
 import { Editor } from '@tiptap/react'
 import { CheckCheck, Trash } from 'lucide-react'
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 
-const LinkHoverMenu = ({ editor }: { editor: Editor }) => {
+const FloatingLinkEditMenu = ({
+  editor,
+  isLinkEditMode,
+  setIsLinkEditMode,
+}: {
+  editor: Editor
+  isLinkEditMode: boolean
+  setIsLinkEditMode: Dispatch<SetStateAction<boolean>>
+}) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const leave = useRef(false)
 
@@ -14,13 +22,13 @@ const LinkHoverMenu = ({ editor }: { editor: Editor }) => {
     leave.current = false
   })
   return (
-    <BubbleMenu
+    <FloatingMenu
       className="bubble-menu-light"
       tippyOptions={{ duration: 150 }}
       editor={editor}
-      shouldShow={({ editor, from, to }) => {
+      shouldShow={({ editor }) => {
         // only show the bubble menu for links.
-        return from === to && editor.isActive('link') && !leave.current
+        return isLinkEditMode
       }}
     >
       <form
@@ -71,8 +79,8 @@ const LinkHoverMenu = ({ editor }: { editor: Editor }) => {
           </button>
         )} */}
       </form>
-    </BubbleMenu>
+    </FloatingMenu>
   )
 }
 
-export default LinkHoverMenu
+export default FloatingLinkEditMenu

@@ -1,13 +1,14 @@
 import { BubbleMenu, BubbleMenuProps, Editor, isNodeSelection } from '@tiptap/react'
 import { Dispatch, FC, SetStateAction, useCallback, useState } from 'react'
 import { BoldIcon, ItalicIcon, UnderlineIcon, StrikethroughIcon, CodeIcon } from 'lucide-react'
-import { NodeSelector } from './NodeSelector'
+import { NodeSelector } from './Toolbar/NodeSelector'
 // import { ColorSelector } from './color-selector'
-import { LinkSelector } from './LinkSelector'
+import { LinkSelector } from './Toolbar/LinkSelector'
 import { cn } from '@/lib/utils'
-import { TextColorSelector } from './TextColorSelector'
-import { BgColorSelector } from './BgColorSelector'
-import { InsertSelector } from './InsertSelector'
+import { TextColorSelector } from './Toolbar/TextColorSelector'
+import { BgColorSelector } from './Toolbar/BgColorSelector'
+import { InsertSelector } from './Toolbar/InsertSelector'
+import { FontFamilySelector } from './Toolbar/FontFamilySelector'
 
 export interface BubbleMenuItem {
   name: string
@@ -85,6 +86,7 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
 
   const [isNodeSelectorOpen, setIsNodeSelectorOpen] = useState(false)
   const [isTextColorSelectorOpen, setIsTextColorSelectorOpen] = useState(false)
+  const [isFontFamilySelectorOpen, setIsFontFamilySelectorOpen] = useState(false)
   const [isBgColorSelectorOpen, setIsBgColorSelectorOpen] = useState(false)
   const [isLinkSelectorOpen, setIsLinkSelectorOpen] = useState(false)
   const [isInsertSelectorOpen, setIsInsertSelectorOpen] = useState(false)
@@ -103,20 +105,31 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
       }
       methods.filter((fn) => fn !== dispatch).forEach((fn) => fn(false))
     },
-    [setIsNodeSelectorOpen, setIsTextColorSelectorOpen, setIsBgColorSelectorOpen, setIsLinkSelectorOpen, setIsInsertSelectorOpen],
+    [
+      setIsNodeSelectorOpen,
+      setIsTextColorSelectorOpen,
+      setIsBgColorSelectorOpen,
+      setIsLinkSelectorOpen,
+      setIsInsertSelectorOpen,
+      setIsFontFamilySelectorOpen,
+    ],
   )
 
   return (
-    <BubbleMenu {...bubbleMenuProps} className="flex w-fit divide-x divide-stone-200 rounded border border-stone-200 bg-white shadow-xl">
+    <BubbleMenu
+      {...bubbleMenuProps}
+      className="flex w-fit divide-x divide-stone-200 rounded border border-stone-200 bg-white shadow-xl opacity-100 animate-fade-in"
+      tippyOptions={{ onHidden: () => setThisOpen() }}
+    >
       <NodeSelector
         editor={props.editor}
         isOpen={isNodeSelectorOpen}
         setIsOpen={() => setThisOpen(isNodeSelectorOpen, setIsNodeSelectorOpen)}
       />
-      <LinkSelector
+      <FontFamilySelector
         editor={props.editor}
-        isOpen={isLinkSelectorOpen}
-        setIsOpen={() => setThisOpen(isLinkSelectorOpen, setIsLinkSelectorOpen)}
+        isOpen={isFontFamilySelectorOpen}
+        setIsOpen={() => setThisOpen(isFontFamilySelectorOpen, setIsFontFamilySelectorOpen)}
       />
       <div className="flex">
         {items.map((item, index) => (
@@ -128,6 +141,11 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
             />
           </button>
         ))}
+        <LinkSelector
+          editor={props.editor}
+          isOpen={isLinkSelectorOpen}
+          setIsOpen={() => setThisOpen(isLinkSelectorOpen, setIsLinkSelectorOpen)}
+        />
       </div>
       <TextColorSelector
         editor={props.editor}

@@ -3,21 +3,24 @@
 import { type Editor } from '@tiptap/react'
 import { Bold, Strikethrough, Italic, Underline, Code, Blocks, Code2 } from 'lucide-react'
 import { Toggle } from '@/ui/toggle'
-import { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { NodeSelector } from './BubbleMenu/NodeSelector'
-import { TextColorSelector } from './BubbleMenu/TextColorSelector'
-import { BgColorSelector } from './BubbleMenu/BgColorSelector'
-import { InsertSelector } from './BubbleMenu/InsertSelector'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import { NodeSelector } from './NodeSelector'
+import { TextColorSelector } from './TextColorSelector'
+import { BgColorSelector } from './BgColorSelector'
+import { InsertSelector } from './InsertSelector'
 import { useClickAway } from 'ahooks'
+import { FontFamilySelector } from './FontFamilySelector'
 
 interface Props {
-  editor?: Editor
+  editor: Editor
+  setIsLinkEditMode: Dispatch<SetStateAction<boolean>>
 }
 
 const Toolbar: React.FC<Props> = ({ editor }) => {
   const [linkOpen, setLinkOpen] = useState(false)
   const [inToolbar, setInToolbar] = useState(false)
   const [isNodeSelectorOpen, setIsNodeSelectorOpen] = useState(false)
+  const [isFontFamilySelectorOpen, setIsFontFamilySelectorOpen] = useState(false)
   const [isTextColorSelectorOpen, setIsTextColorSelectorOpen] = useState(false)
   const [isBgColorSelectorOpen, setIsBgColorSelectorOpen] = useState(false)
   const [isInsertSelectorOpen, setIsInsertSelectorOpen] = useState(false)
@@ -30,8 +33,16 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
     }
   }, [toolbarRef])
 
+  useEffect(() => {}, [])
+
   const setThisOpen = (state?: boolean, dispatch?: Dispatch<SetStateAction<boolean>>) => {
-    const methods = [setIsNodeSelectorOpen, setIsTextColorSelectorOpen, setIsBgColorSelectorOpen, setIsInsertSelectorOpen]
+    const methods = [
+      setIsNodeSelectorOpen,
+      setIsTextColorSelectorOpen,
+      setIsBgColorSelectorOpen,
+      setIsInsertSelectorOpen,
+      setIsFontFamilySelectorOpen,
+    ]
     if (dispatch) {
       dispatch(!state)
     }
@@ -45,6 +56,12 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
   return (
     <div className="border bg-transparent flex items-center py-1 px-2 flex-wrap" ref={toolbarRef} onClick={() => setInToolbar(true)}>
       <NodeSelector editor={editor} isOpen={isNodeSelectorOpen} setIsOpen={() => setThisOpen(isNodeSelectorOpen, setIsNodeSelectorOpen)} />
+      <span className="px-2 text-neutral-300">|</span>
+      <FontFamilySelector
+        editor={editor}
+        isOpen={isFontFamilySelectorOpen}
+        setIsOpen={() => setThisOpen(isFontFamilySelectorOpen, setIsFontFamilySelectorOpen)}
+      />
       <Toggle size="sm" pressed={editor.isActive('bold')} onPressedChange={() => editor.chain().focus().toggleBold().run()}>
         <Bold className="h-4 w-4" />
       </Toggle>
