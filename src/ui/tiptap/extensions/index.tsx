@@ -156,7 +156,7 @@ export const defaultExtensions = [
     transformPastedText: true,
   }),
   CustomKeymap,
-  HoverExtension,
+  // HoverExtension,
   DragAndDrop,
   // DraggableItem,
 ]
