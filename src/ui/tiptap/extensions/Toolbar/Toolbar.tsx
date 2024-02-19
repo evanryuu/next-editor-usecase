@@ -19,35 +19,17 @@ interface Props {
 const Toolbar: React.FC<Props> = ({ editor }) => {
   const [linkOpen, setLinkOpen] = useState(false)
   const [inToolbar, setInToolbar] = useState(false)
-  const [isNodeSelectorOpen, setIsNodeSelectorOpen] = useState(false)
-  const [isFontFamilySelectorOpen, setIsFontFamilySelectorOpen] = useState(false)
-  const [isTextColorSelectorOpen, setIsTextColorSelectorOpen] = useState(false)
-  const [isBgColorSelectorOpen, setIsBgColorSelectorOpen] = useState(false)
-  const [isInsertSelectorOpen, setIsInsertSelectorOpen] = useState(false)
+  const [openMenu, setOpenMenu] = useState('')
   const toolbarRef = useRef<HTMLDivElement | null>(null)
 
   useClickAway(() => {
     if (inToolbar) {
-      setThisOpen()
+      setOpenMenu('')
       setInToolbar(false)
     }
   }, [toolbarRef])
 
   useEffect(() => {}, [])
-
-  const setThisOpen = (state?: boolean, dispatch?: Dispatch<SetStateAction<boolean>>) => {
-    const methods = [
-      setIsNodeSelectorOpen,
-      setIsTextColorSelectorOpen,
-      setIsBgColorSelectorOpen,
-      setIsInsertSelectorOpen,
-      setIsFontFamilySelectorOpen,
-    ]
-    if (dispatch) {
-      dispatch(!state)
-    }
-    methods.filter((fn) => fn !== dispatch).forEach((fn) => fn(false))
-  }
 
   if (!editor) {
     return null
@@ -55,13 +37,9 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
 
   return (
     <div className="border bg-transparent flex items-center py-1 px-2 flex-wrap" ref={toolbarRef} onClick={() => setInToolbar(true)}>
-      <NodeSelector editor={editor} isOpen={isNodeSelectorOpen} setIsOpen={() => setThisOpen(isNodeSelectorOpen, setIsNodeSelectorOpen)} />
+      <NodeSelector editor={editor} isOpen={openMenu === 'node'} setIsOpen={() => setOpenMenu('node')} />
       <span className="px-2 text-neutral-300">|</span>
-      <FontFamilySelector
-        editor={editor}
-        isOpen={isFontFamilySelectorOpen}
-        setIsOpen={() => setThisOpen(isFontFamilySelectorOpen, setIsFontFamilySelectorOpen)}
-      />
+      <FontFamilySelector editor={editor} isOpen={openMenu === 'fontFamily'} setIsOpen={() => setOpenMenu('fontFamily')} />
       <Toggle size="sm" pressed={editor.isActive('bold')} onPressedChange={() => editor.chain().focus().toggleBold().run()}>
         <Bold className="h-4 w-4" />
       </Toggle>
@@ -94,22 +72,10 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
         <i className="ri-align-right"></i>
       </Toggle>
       <span className="px-2 text-neutral-300">|</span>
-      <TextColorSelector
-        editor={editor}
-        isOpen={isTextColorSelectorOpen}
-        setIsOpen={() => setThisOpen(isTextColorSelectorOpen, setIsTextColorSelectorOpen)}
-      />
-      <BgColorSelector
-        editor={editor}
-        isOpen={isBgColorSelectorOpen}
-        setIsOpen={() => setThisOpen(isBgColorSelectorOpen, setIsBgColorSelectorOpen)}
-      />
+      <TextColorSelector editor={editor} isOpen={openMenu === 'textColor'} setIsOpen={() => setOpenMenu('textColor')} />
+      <BgColorSelector editor={editor} isOpen={openMenu === 'bgColor'} setIsOpen={() => setOpenMenu('bgColor')} />
       <span className="px-2 text-neutral-300">|</span>
-      <InsertSelector
-        editor={editor}
-        isOpen={isInsertSelectorOpen}
-        setIsOpen={() => setThisOpen(isInsertSelectorOpen, setIsInsertSelectorOpen)}
-      />
+      <InsertSelector editor={editor} isOpen={openMenu === 'insert'} setIsOpen={() => setOpenMenu('insert')} />
     </div>
   )
 }

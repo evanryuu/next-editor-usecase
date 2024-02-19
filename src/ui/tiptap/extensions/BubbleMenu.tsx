@@ -35,12 +35,6 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
       command: () => props.editor.chain().focus().toggleItalic().run(),
       icon: ItalicIcon,
     },
-    // {
-    //   name: 'underline',
-    //   isActive: () => props.editor.isActive('underline'),
-    //   command: () => props.editor.chain().focus().toggleUnderline().run(),
-    //   icon: UnderlineIcon,
-    // },
     {
       name: 'strike',
       isActive: () => props.editor.isActive('strike'),
@@ -79,58 +73,21 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
     tippyOptions: {
       moveTransition: 'transform 0.15s ease-out',
       onHidden: () => {
-        setThisOpen()
+        setOpenMenu('')
       },
     },
   }
 
-  const [isNodeSelectorOpen, setIsNodeSelectorOpen] = useState(false)
-  const [isTextColorSelectorOpen, setIsTextColorSelectorOpen] = useState(false)
-  const [isFontFamilySelectorOpen, setIsFontFamilySelectorOpen] = useState(false)
-  const [isBgColorSelectorOpen, setIsBgColorSelectorOpen] = useState(false)
-  const [isLinkSelectorOpen, setIsLinkSelectorOpen] = useState(false)
-  const [isInsertSelectorOpen, setIsInsertSelectorOpen] = useState(false)
-
-  const setThisOpen = useCallback(
-    (state?: boolean, dispatch?: Dispatch<SetStateAction<boolean>>) => {
-      const methods = [
-        setIsNodeSelectorOpen,
-        setIsTextColorSelectorOpen,
-        setIsBgColorSelectorOpen,
-        setIsLinkSelectorOpen,
-        setIsInsertSelectorOpen,
-      ]
-      if (dispatch) {
-        dispatch(!state)
-      }
-      methods.filter((fn) => fn !== dispatch).forEach((fn) => fn(false))
-    },
-    [
-      setIsNodeSelectorOpen,
-      setIsTextColorSelectorOpen,
-      setIsBgColorSelectorOpen,
-      setIsLinkSelectorOpen,
-      setIsInsertSelectorOpen,
-      setIsFontFamilySelectorOpen,
-    ],
-  )
+  const [openMenu, setOpenMenu] = useState('')
 
   return (
     <BubbleMenu
       {...bubbleMenuProps}
       className="flex w-fit divide-x divide-stone-200 rounded border border-stone-200 bg-white shadow-xl opacity-100 animate-fade-in"
-      tippyOptions={{ onHidden: () => setThisOpen() }}
+      tippyOptions={{ onHidden: () => setOpenMenu('') }}
     >
-      <NodeSelector
-        editor={props.editor}
-        isOpen={isNodeSelectorOpen}
-        setIsOpen={() => setThisOpen(isNodeSelectorOpen, setIsNodeSelectorOpen)}
-      />
-      <FontFamilySelector
-        editor={props.editor}
-        isOpen={isFontFamilySelectorOpen}
-        setIsOpen={() => setThisOpen(isFontFamilySelectorOpen, setIsFontFamilySelectorOpen)}
-      />
+      <NodeSelector editor={props.editor} isOpen={openMenu === 'node'} setIsOpen={() => setOpenMenu('node')} />
+      <FontFamilySelector editor={props.editor} isOpen={openMenu === 'fontFamily'} setIsOpen={() => setOpenMenu('fontFamily')} />
       <div className="flex">
         {items.map((item, index) => (
           <button key={index} onClick={item.command} className="p-2 text-stone-600 hover:bg-stone-100 active:bg-stone-200" type="button">
@@ -141,27 +98,11 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
             />
           </button>
         ))}
-        <LinkSelector
-          editor={props.editor}
-          isOpen={isLinkSelectorOpen}
-          setIsOpen={() => setThisOpen(isLinkSelectorOpen, setIsLinkSelectorOpen)}
-        />
+        <LinkSelector editor={props.editor} isOpen={openMenu === 'link'} setIsOpen={() => setOpenMenu('link')} />
       </div>
-      <TextColorSelector
-        editor={props.editor}
-        isOpen={isTextColorSelectorOpen}
-        setIsOpen={() => setThisOpen(isTextColorSelectorOpen, setIsTextColorSelectorOpen)}
-      />
-      <BgColorSelector
-        editor={props.editor}
-        isOpen={isBgColorSelectorOpen}
-        setIsOpen={() => setThisOpen(isBgColorSelectorOpen, setIsBgColorSelectorOpen)}
-      />
-      <InsertSelector
-        editor={props.editor}
-        isOpen={isInsertSelectorOpen}
-        setIsOpen={() => setThisOpen(isInsertSelectorOpen, setIsInsertSelectorOpen)}
-      />
+      <TextColorSelector editor={props.editor} isOpen={openMenu === 'textColor'} setIsOpen={() => setOpenMenu('textColor')} />
+      <BgColorSelector editor={props.editor} isOpen={openMenu === 'bgColor'} setIsOpen={() => setOpenMenu('bgColor')} />
+      <InsertSelector editor={props.editor} isOpen={openMenu === 'insert'} setIsOpen={() => setOpenMenu('insert')} />
     </BubbleMenu>
   )
 }

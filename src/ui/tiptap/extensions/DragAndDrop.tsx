@@ -106,7 +106,7 @@ function DragHandle(options: DragHandleOptions) {
       dragHandleElement = document.createElement('div')
       dragHandleElement.draggable = true
       dragHandleElement.dataset.dragHandle = ''
-      dragHandleElement.classList.add('drag-handle', 'opacity-1', 'transition-all', 'hover:bg-neutral-300')
+      dragHandleElement.classList.add('drag-handle', 'opacity-1', 'transition-color', 'hover:bg-neutral-300')
       dragHandleElement.addEventListener('dragstart', (e) => {
         handleDragStart(e, view)
       })
