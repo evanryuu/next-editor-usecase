@@ -21,6 +21,7 @@ import { HoverExtension } from './HoverExtension'
 import DraggableItem from './DraggableItem'
 import Paragraph from '@tiptap/extension-paragraph'
 import tableExtensions from './TableExtension'
+import { FontSize } from './extension-font-size'
 export const defaultExtensions = [
   StarterKit.configure({
     bulletList: {
@@ -129,9 +130,8 @@ export const defaultExtensions = [
   SlashCommand,
   TiptapUnderline,
   TextStyle,
-  FontFamily.configure({
-    types: ['textStyle'],
-  }),
+  FontFamily,
+  FontSize,
   TextAlign.configure({
     types: ['heading', 'paragraph'],
   }),

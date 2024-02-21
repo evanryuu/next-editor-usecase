@@ -18,6 +18,7 @@ export const LinkActionsMenu = (props: LinkActionsProps) => {
   const [element, setElement] = React.useState<HTMLDivElement | null>(null)
   const [isEditing, setIsEditing] = React.useState<boolean>(true)
   const [linkUrl, setLinkUrl] = React.useState<string>('')
+  const [closeModal, setClose] = React.useState(false)
 
   React.useEffect(() => {
     if (!element) {
@@ -65,26 +66,31 @@ export const LinkActionsMenu = (props: LinkActionsProps) => {
 
   if (isEditing) {
     return (
-      <div ref={setElement} className={`${className} rounded-8xl overflow-hidden`} style={{ visibility: 'hidden' }}>
-        <LinkEditingMenu editor={editor} linkUrl={linkUrl} setLinkUrl={setLinkUrl} setIsEditing={setIsEditing} />
+      <div ref={setElement} className={`${className} rounded-8xl overflow-hidden`}>
+        <LinkEditingMenu editor={editor} linkUrl={linkUrl} setLinkUrl={setLinkUrl} setIsEditing={setIsEditing} close={setClose} />
       </div>
     )
   }
 
+  if (closeModal) {
+    setTimeout(() => setClose(false), 0)
+    return <div ref={setElement}></div>
+  }
+
   return (
-    <div ref={setElement} className={`${className} p-2`} style={{ visibility: 'hidden' }}>
+    <div ref={setElement} className={`${className || 'px-2'}`}>
       <span className="text-neutral-400 pr-2 text-sm">{linkUrl}</span>
-      <Toggle
-        className="text-xl"
+      <button
+        className="items-center rounded-sm p-1 transition-all hover:bg-slate-100 dark:hover:bg-slate-800"
         onClick={() => {
           setLinkUrl(linkUrl || '')
           setIsEditing(true)
         }}
       >
         <i className="ri-edit-line"></i>
-      </Toggle>
-      <Toggle
-        className="text-xl"
+      </button>
+      <button
+        className="items-center rounded-sm p-1 transition-all hover:bg-slate-100 dark:hover:bg-slate-800"
         onClick={() => {
           if (linkUrl) {
             window.open(linkUrl, '_blank')
@@ -92,7 +98,7 @@ export const LinkActionsMenu = (props: LinkActionsProps) => {
         }}
       >
         <i className="ri-eye-line"></i>
-      </Toggle>
+      </button>
     </div>
   )
 }

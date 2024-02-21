@@ -7,7 +7,7 @@ import { BubbleMenuItem } from '../BubbleMenu'
 interface InsertSelectorProps {
   editor: Editor
   isOpen: boolean
-  setIsOpen: Dispatch<SetStateAction<boolean>>
+  setIsOpen: (bool: boolean) => void
 }
 
 export const InsertSelector: FC<InsertSelectorProps> = ({ editor, isOpen, setIsOpen }) => {

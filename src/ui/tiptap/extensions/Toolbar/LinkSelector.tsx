@@ -6,7 +6,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useRef } from 'react'
 export interface LinkSelectorProps {
   editor: Editor
   isOpen: boolean
-  setIsOpen: Dispatch<SetStateAction<boolean>>
+  setIsOpen: (bool: boolean) => void
 }
 
 export const LinkSelector: FC<LinkSelectorProps> = ({ editor, isOpen, setIsOpen }) => {

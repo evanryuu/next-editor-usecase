@@ -11,7 +11,7 @@ interface MenuItem {
 interface FontFamilySelector {
   editor: Editor
   isOpen: boolean
-  setIsOpen: Dispatch<SetStateAction<boolean>>
+  setIsOpen: (bool: boolean) => void
 }
 
 const FONT_FAMILIES: MenuItem[] = [
@@ -51,7 +51,7 @@ export const FontFamilySelector: FC<FontFamilySelector> = ({ editor, isOpen, set
           align="start"
           className="z-[99999] my-1 flex max-h-80 w-48 flex-col overflow-hidden overflow-y-auto rounded border border-stone-200 bg-white p-1 shadow-xl animate-in fade-in slide-in-from-top-1"
         >
-          <div className="my-1 px-2 text-sm text-stone-500">Color</div>
+          <div className="my-1 px-2 text-xs text-stone-500 font-semibold">FONT FAMILY</div>
           {FONT_FAMILIES.map(({ name, fontFamily }, index) => (
             <button
               key={index}

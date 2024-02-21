@@ -79,6 +79,7 @@ const Tiptap: React.FC<TiptapProps> = (props) => {
         va.track('Autocomplete Shortcut Used')
       }
     },
+    onTransaction: ({ transaction }) => console.log(transaction),
   })
   const prev = useRef('')
 

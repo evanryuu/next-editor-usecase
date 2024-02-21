@@ -15,7 +15,7 @@ const UploadImagesPlugin = () =>
       apply(tr, set) {
         set = set.map(tr.mapping, tr.doc)
         // See if the transaction adds or removes any placeholders
-        // @ts-expect-error novel does this
+        // @ts-expect-error  does this
         const action = tr.getMeta(this)
         if (action && action.add) {
           const { id, pos, src } = action.add

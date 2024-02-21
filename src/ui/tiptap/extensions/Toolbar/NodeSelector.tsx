@@ -7,7 +7,7 @@ import { BubbleMenuItem } from '../BubbleMenu'
 interface NodeSelectorProps {
   editor: Editor
   isOpen: boolean
-  setIsOpen: Dispatch<SetStateAction<boolean>>
+  setIsOpen: (bool: boolean) => void
 }
 
 export const NodeSelector: FC<NodeSelectorProps> = ({ editor, isOpen, setIsOpen }) => {

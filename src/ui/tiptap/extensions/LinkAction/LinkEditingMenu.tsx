@@ -1,7 +1,6 @@
 import * as React from 'react'
 import type { Editor } from '@tiptap/react'
-import { ToolbarButton } from './ToolbarButton'
-import { CheckCheck, DoorClosed, Edit, View } from 'lucide-react'
+import { Check, Trash, View, XCircle } from 'lucide-react'
 import { getUrlFromString } from '@/shared/url'
 
 export interface LinkEditingMenu {
@@ -9,6 +8,7 @@ export interface LinkEditingMenu {
   setLinkUrl: React.Dispatch<React.SetStateAction<string>>
   editor: Editor
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
+  close: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const LinkEditingMenu = (props: LinkEditingMenu) => {
@@ -24,15 +24,16 @@ export const LinkEditingMenu = (props: LinkEditingMenu) => {
         .run()
     }, 0)
   }
+
   const close = () => {
-    setLinkUrl('')
     setIsEditing(false)
+    props.close(true)
   }
   return (
-    <div className="flex items-center p-1">
+    <div className="flex items-center p-2 focus-within:border-blue-200 border border-transparent transition-colors">
       <input
         id="edit-link-url"
-        className="p-2"
+        className="text-sm !outline-none"
         value={linkUrl}
         onKeyDown={(e) => {
           if (e.code === 'Enter') {
@@ -46,12 +47,23 @@ export const LinkEditingMenu = (props: LinkEditingMenu) => {
         }}
       />
 
-      <button color="success" onClick={changeUrl}>
-        <CheckCheck />
+      <button className="flex items-center rounded-sm p-1 transition-all hover:bg-slate-100 dark:hover:bg-slate-800" onClick={changeUrl}>
+        <Check className="h-4 w-4" />
       </button>
 
-      <button color="error" onClick={close}>
-        <DoorClosed />
+      <button className="flex items-center rounded-sm p-1 transition-all hover:bg-slate-100 dark:hover:bg-slate-800" onClick={close}>
+        <XCircle className="h-4 w-4" />
+      </button>
+
+      <button
+        type="button"
+        className="flex items-center rounded-sm p-1 text-red-600 transition-all hover:bg-red-100 dark:hover:bg-red-800"
+        onClick={() => {
+          editor.chain().focus().unsetLink().run()
+          close()
+        }}
+      >
+        <Trash className="h-4 w-4" />
       </button>
     </div>
   )

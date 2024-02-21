@@ -1,14 +1,14 @@
 import { BubbleMenu, BubbleMenuProps, Editor, isNodeSelection } from '@tiptap/react'
-import { Dispatch, FC, SetStateAction, useCallback, useState } from 'react'
+import { FC, useState } from 'react'
 import { BoldIcon, ItalicIcon, UnderlineIcon, StrikethroughIcon, CodeIcon } from 'lucide-react'
 import { NodeSelector } from './Toolbar/NodeSelector'
 // import { ColorSelector } from './color-selector'
 import { LinkSelector } from './Toolbar/LinkSelector'
-import { cn } from '@/lib/utils'
 import { TextColorSelector } from './Toolbar/TextColorSelector'
 import { BgColorSelector } from './Toolbar/BgColorSelector'
 import { InsertSelector } from './Toolbar/InsertSelector'
 import { FontFamilySelector } from './Toolbar/FontFamilySelector'
+import { cn } from '@/lib/utils'
 
 export interface BubbleMenuItem {
   name: string
@@ -65,7 +65,7 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
       // - the selected node is an image
       // - the selection is empty
       // - the selection is a node selection (for drag handles)
-      if (editor.isActive('image') || empty || isNodeSelection(selection) || editor.isActive('link') || editor.isActive('table')) {
+      if (editor.isActive('image') || empty || isNodeSelection(selection) || editor.isActive('link')) {
         return false
       }
       return true
@@ -73,21 +73,33 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
     tippyOptions: {
       moveTransition: 'transform 0.15s ease-out',
       onHidden: () => {
-        setOpenMenu('')
+        setOpenedMenu('')
       },
     },
   }
 
-  const [openMenu, setOpenMenu] = useState('')
+  const [openedMenu, setOpenedMenu] = useState('')
+
+  const setIsOpen = (bool: boolean, selector: string) => {
+    if (bool) {
+      setOpenedMenu(selector)
+    } else {
+      setOpenedMenu('')
+    }
+  }
 
   return (
     <BubbleMenu
       {...bubbleMenuProps}
       className="flex w-fit divide-x divide-stone-200 rounded border border-stone-200 bg-white shadow-xl opacity-100 animate-fade-in"
-      tippyOptions={{ onHidden: () => setOpenMenu('') }}
+      tippyOptions={{ onHidden: () => setOpenedMenu('') }}
     >
-      <NodeSelector editor={props.editor} isOpen={openMenu === 'node'} setIsOpen={() => setOpenMenu('node')} />
-      <FontFamilySelector editor={props.editor} isOpen={openMenu === 'fontFamily'} setIsOpen={() => setOpenMenu('fontFamily')} />
+      <NodeSelector editor={props.editor} isOpen={openedMenu === 'node'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'node')} />
+      <FontFamilySelector
+        editor={props.editor}
+        isOpen={openedMenu === 'fontFamily'}
+        setIsOpen={(bool: boolean) => setIsOpen(bool, 'fontFamily')}
+      />
       <div className="flex">
         {items.map((item, index) => (
           <button key={index} onClick={item.command} className="p-2 text-stone-600 hover:bg-stone-100 active:bg-stone-200" type="button">
@@ -98,11 +110,15 @@ const EditorBubbleMenu: FC<TiptapBubbleMenuProps> = (props) => {
             />
           </button>
         ))}
-        <LinkSelector editor={props.editor} isOpen={openMenu === 'link'} setIsOpen={() => setOpenMenu('link')} />
+        <LinkSelector editor={props.editor} isOpen={openedMenu === 'link'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'link')} />
       </div>
-      <TextColorSelector editor={props.editor} isOpen={openMenu === 'textColor'} setIsOpen={() => setOpenMenu('textColor')} />
-      <BgColorSelector editor={props.editor} isOpen={openMenu === 'bgColor'} setIsOpen={() => setOpenMenu('bgColor')} />
-      <InsertSelector editor={props.editor} isOpen={openMenu === 'insert'} setIsOpen={() => setOpenMenu('insert')} />
+      <TextColorSelector
+        editor={props.editor}
+        isOpen={openedMenu === 'textColor'}
+        setIsOpen={(bool: boolean) => setIsOpen(bool, 'textColor')}
+      />
+      <BgColorSelector editor={props.editor} isOpen={openedMenu === 'bgColor'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'bgColor')} />
+      <InsertSelector editor={props.editor} isOpen={openedMenu === 'insert'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'insert')} />
     </BubbleMenu>
   )
 }

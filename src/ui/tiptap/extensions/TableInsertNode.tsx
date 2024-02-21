@@ -7,9 +7,9 @@ const TableInsertNode: React.FC = () => {
   const [count, setCount] = useState(0)
   const test = () => console.log('你有事？')
   return (
-    <NodeViewWrapper className="group relative">
+    <NodeViewWrapper className="group relative" as="table">
       <div className="drag-test-handle transition-opacity group-hover:opacity-100" contentEditable="false" draggable="true" data-drag-handle />
-      <NodeViewContent className="content border-collapse table"></NodeViewContent>
+      <NodeViewContent className="" as="tbody"></NodeViewContent>
     </NodeViewWrapper>
   )
 }

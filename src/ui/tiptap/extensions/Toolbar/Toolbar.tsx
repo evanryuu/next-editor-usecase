@@ -1,8 +1,8 @@
 'use client'
 
 import { type Editor } from '@tiptap/react'
-import { Bold, Strikethrough, Italic, Underline, Code, Blocks, Code2 } from 'lucide-react'
-import { Toggle } from '@/ui/toggle'
+import { Bold, Strikethrough, Italic, Underline, Code, Code2, AlignLeft, AlignCenter, AlignRight } from 'lucide-react'
+
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { NodeSelector } from './NodeSelector'
 import { TextColorSelector } from './TextColorSelector'
@@ -10,6 +10,9 @@ import { BgColorSelector } from './BgColorSelector'
 import { InsertSelector } from './InsertSelector'
 import { useClickAway } from 'ahooks'
 import { FontFamilySelector } from './FontFamilySelector'
+import { FontSizeSelector } from './FontSizeSelector'
+import { Toggle } from '@/ui/toggle'
+import { LinkSelector } from './LinkSelector'
 
 interface Props {
   editor: Editor
@@ -19,15 +22,23 @@ interface Props {
 const Toolbar: React.FC<Props> = ({ editor }) => {
   const [linkOpen, setLinkOpen] = useState(false)
   const [inToolbar, setInToolbar] = useState(false)
-  const [openMenu, setOpenMenu] = useState('')
+  const [openedMenu, setOpenedMenu] = useState('')
   const toolbarRef = useRef<HTMLDivElement | null>(null)
 
   useClickAway(() => {
     if (inToolbar) {
-      setOpenMenu('')
+      setOpenedMenu('')
       setInToolbar(false)
     }
   }, [toolbarRef])
+
+  const setIsOpen = (bool: boolean, selector: string) => {
+    if (bool) {
+      setOpenedMenu(selector)
+    } else {
+      setOpenedMenu('')
+    }
+  }
 
   useEffect(() => {}, [])
 
@@ -36,10 +47,13 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
   }
 
   return (
-    <div className="border bg-transparent flex items-center py-1 px-2 flex-wrap" ref={toolbarRef} onClick={() => setInToolbar(true)}>
-      <NodeSelector editor={editor} isOpen={openMenu === 'node'} setIsOpen={() => setOpenMenu('node')} />
+    <div className="border-b bg-transparent flex items-center py-1 px-2 flex-wrap" ref={toolbarRef} onClick={() => setInToolbar(true)}>
+      <NodeSelector editor={editor} isOpen={openedMenu === 'node'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'node')} />
       <span className="px-2 text-neutral-300">|</span>
-      <FontFamilySelector editor={editor} isOpen={openMenu === 'fontFamily'} setIsOpen={() => setOpenMenu('fontFamily')} />
+      <FontFamilySelector editor={editor} isOpen={openedMenu === 'fontFamily'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'fontFamily')} />
+      <FontSizeSelector editor={editor} isOpen={openedMenu === 'fontSize'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'fontSize')} />
+
+      {/* S Text Style */}
       <Toggle size="sm" pressed={editor.isActive('bold')} onPressedChange={() => editor.chain().focus().toggleBold().run()}>
         <Bold className="h-4 w-4" />
       </Toggle>
@@ -58,24 +72,28 @@ const Toolbar: React.FC<Props> = ({ editor }) => {
       <Toggle size="sm" pressed={editor.isActive('codeBlock')} onPressedChange={() => editor.chain().focus().toggleCodeBlock().run()}>
         <Code2 className="h-4 w-4" />
       </Toggle>
-      <Toggle size="sm" pressed={editor.isActive('link')} onPressedChange={() => setLinkOpen(true)}>
-        <i className="ri-link"></i>
-      </Toggle>
+      <LinkSelector editor={editor} isOpen={openedMenu === 'link'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'link')} />
+
+      {/* E Text Style */}
+
+      {/* S Text Align */}
       <span className="px-2 text-neutral-300">|</span>
       <Toggle size="sm" pressed={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()}>
-        <i className="ri-align-left"></i>
+        <AlignLeft className="h-4 w-4" />
       </Toggle>
       <Toggle size="sm" pressed={editor.isActive({ textAlign: 'center' })} onClick={() => editor.chain().focus().setTextAlign('center').run()}>
-        <i className="ri-align-center"></i>
+        <AlignCenter className="h-4 w-4" />
       </Toggle>
       <Toggle size="sm" pressed={editor.isActive({ textAlign: 'right' })} onClick={() => editor.chain().focus().setTextAlign('right').run()}>
-        <i className="ri-align-right"></i>
+        <AlignRight className="h-4 w-4" />
       </Toggle>
+      {/* E Text Align */}
+
       <span className="px-2 text-neutral-300">|</span>
-      <TextColorSelector editor={editor} isOpen={openMenu === 'textColor'} setIsOpen={() => setOpenMenu('textColor')} />
-      <BgColorSelector editor={editor} isOpen={openMenu === 'bgColor'} setIsOpen={() => setOpenMenu('bgColor')} />
+      <TextColorSelector editor={editor} isOpen={openedMenu === 'textColor'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'textColor')} />
+      <BgColorSelector editor={editor} isOpen={openedMenu === 'bgColor'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'bgColor')} />
       <span className="px-2 text-neutral-300">|</span>
-      <InsertSelector editor={editor} isOpen={openMenu === 'insert'} setIsOpen={() => setOpenMenu('insert')} />
+      <InsertSelector editor={editor} isOpen={openedMenu === 'insert'} setIsOpen={(bool: boolean) => setIsOpen(bool, 'insert')} />
     </div>
   )
 }

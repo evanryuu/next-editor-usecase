@@ -11,7 +11,7 @@ export interface BubbleColorMenuItem {
 interface ColorSelectorProps {
   editor: Editor
   isOpen: boolean
-  setIsOpen: Dispatch<SetStateAction<boolean>>
+  setIsOpen: (bool: boolean) => void
 }
 
 const TEXT_COLORS: BubbleColorMenuItem[] = [
